@@ -34,14 +34,12 @@ const ToastContainer = styled.div`
       transform: translateY(10px);
     }
   }
+
+  background-color: ${(props) => props.color || "none"};
 `;
 
 const Toast = ({ message, color }) => {
-  return (
-    <ToastContainer style={{ backgroundColor: { color } }}>
-      {message}
-    </ToastContainer>
-  );
+  return <ToastContainer color={color}>{message}</ToastContainer>;
 };
 
 export default Toast;
