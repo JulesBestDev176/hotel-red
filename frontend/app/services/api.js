@@ -99,11 +99,7 @@ export const listHotel = async () => {
 // Ajouter un hotel
 export const addHotel = async (hotelData) => {
   try {
-    const response = await apiClient.post("/addHotel", hotelData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = await apiClient.post("/addHotel", hotelData);
     return response.data;
   } catch (error) {
     console.error("Erreur lors de l'ajout de l'hôtel : ", error);

@@ -17,7 +17,7 @@ export const createHotel = async (req, res) => {
       .json({ success: false, message: "Veuillez remplir tous les champs" });
   }
 
-  const imageName = req.file.filename;
+  const imageName = req.file.filename || "";
 
   const newHotel = new Hotel({
     nom: hotel.nom,
@@ -27,7 +27,7 @@ export const createHotel = async (req, res) => {
     prix: hotel.prix,
     devise: hotel.devise,
     image: imageName,
-    userId: req.user._id || "",
+    userId: req.user._id,
   });
 
   try {
