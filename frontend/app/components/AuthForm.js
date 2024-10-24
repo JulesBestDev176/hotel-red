@@ -130,6 +130,7 @@ const AuthForm = ({ type }) => {
   const [nom, setNom] = useState("");
   const [error, setError] = useState("");
   const [toastMessage, setToastMessage] = useState("");
+  const [color, setColor] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -140,6 +141,7 @@ const AuthForm = ({ type }) => {
       try {
         const result = await login({ email, password });
         console.log(result);
+        setColor("green");
         router.push("/dashboard");
       } catch (error) {
         setEmail("");
@@ -147,10 +149,12 @@ const AuthForm = ({ type }) => {
         setToastMessage(
           "Erreur lors de la connexion. Vérifiez vos identifiants."
         );
+        setColor("red");
       }
     } else if (type === "inscription") {
       try {
         const result = await signup({ nom, email, password });
+        setColor("green");
         router.push("../");
       } catch (error) {
         setNom("");
@@ -160,7 +164,7 @@ const AuthForm = ({ type }) => {
         setToastMessage(
           "Erreur lors de l'inscription. Vérifiez vos informations."
         );
-        return <Toast message={error} />;
+        setColor("red");
       }
     } else {
       console.log("a");
@@ -305,7 +309,7 @@ const AuthForm = ({ type }) => {
         </Top>
 
         <AuthContainer>
-          {toastMessage && <Toast message={toastMessage} />}
+          {toastMessage && <Toast message={toastMessage} color={color} />}
           {renderTopMessage()}
           {renderForm()}
         </AuthContainer>

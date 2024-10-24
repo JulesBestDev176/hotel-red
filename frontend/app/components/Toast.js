@@ -8,7 +8,6 @@ const ToastContainer = styled.div`
   right: 20px;
   min-width: 250px;
   padding: 16px;
-  background-color: #333;
   color: white;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
@@ -37,8 +36,12 @@ const ToastContainer = styled.div`
   }
 `;
 
-const Toast = ({ message }) => {
-  return <ToastContainer>{message}</ToastContainer>;
+const Toast = ({ message, color }) => {
+  return (
+    <ToastContainer style={{ backgroundColor: { color } }}>
+      {message}
+    </ToastContainer>
+  );
 };
 
 export default Toast;
