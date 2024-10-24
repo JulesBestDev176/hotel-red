@@ -10,8 +10,7 @@ export const createHotel = async (req, res) => {
     !hotel.adresse ||
     !hotel.tel ||
     !hotel.prix ||
-    !hotel.devise ||
-    !req.file
+    !hotel.devise
   ) {
     return res
       .status(400)
@@ -28,7 +27,7 @@ export const createHotel = async (req, res) => {
     prix: hotel.prix,
     devise: hotel.devise,
     image: imageName,
-    userId: req.user._id,
+    userId: req.user._id || "",
   });
 
   try {
