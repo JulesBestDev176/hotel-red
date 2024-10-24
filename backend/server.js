@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import cors from "cors";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.js";
@@ -12,17 +11,6 @@ dotenv.config();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://hotel-red.onrender.com",
-      // "https://red-product-frontend-peach.vercel.app",
-    ], // Spécifiez votre origine front-end
-    methods: ["GET", "POST", "PATCH", "DELETE"], // Méthodes autorisées
-    credentials: true, // Autorise les cookies
-  })
-);
 app.use(helmet());
 app.use(cookieParser());
 // Middleware pour traiter les données JSON
