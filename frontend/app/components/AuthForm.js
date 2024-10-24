@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { login, signup, signout } from "../services/api";
 import { useRouter } from "next/navigation";
+import Toast from "./Toast";
 
 const AuthPage = styled.div`
   position: relative;
@@ -142,6 +143,7 @@ const AuthForm = ({ type }) => {
         setEmail("");
         setPassword("");
         setError("Erreur lors de la connexion. Vérifiez vos identifiants.");
+        return <Toast message={error} />;
       }
     } else if (type === "inscription") {
       try {
@@ -153,6 +155,7 @@ const AuthForm = ({ type }) => {
         setPassword("");
         console.log(error);
         setError("Erreur lors de l'inscription'. Vérifiez vos informations.");
+        return <Toast message={error} />;
       }
     } else {
       console.log("a");
