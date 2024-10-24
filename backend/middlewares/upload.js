@@ -10,8 +10,7 @@ const __dirname = path.dirname(__filename);
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadPath = path.join(
-      __dirname,
-      "../../frontend/public/assets/images/hotel"
+      "https://hotel-red.onrender.com/public/assets/images/hotel"
     );
     cb(null, uploadPath);
   },
