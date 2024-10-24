@@ -129,10 +129,12 @@ const AuthForm = ({ type }) => {
   const [password, setPassword] = useState("");
   const [nom, setNom] = useState("");
   const [error, setError] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setToastMessage("");
 
     if (type === "connexion") {
       try {
@@ -142,8 +144,9 @@ const AuthForm = ({ type }) => {
       } catch (error) {
         setEmail("");
         setPassword("");
-        setError("Erreur lors de la connexion. Vérifiez vos identifiants.");
-        return <Toast message={error} />;
+        setToastMessage(
+          "Erreur lors de la connexion. Vérifiez vos identifiants."
+        );
       }
     } else if (type === "inscription") {
       try {
@@ -154,7 +157,9 @@ const AuthForm = ({ type }) => {
         setEmail("");
         setPassword("");
         console.log(error);
-        setError("Erreur lors de l'inscription'. Vérifiez vos informations.");
+        setToastMessage(
+          "Erreur lors de l'inscription. Vérifiez vos informations."
+        );
         return <Toast message={error} />;
       }
     } else {
@@ -300,6 +305,7 @@ const AuthForm = ({ type }) => {
         </Top>
 
         <AuthContainer>
+          {toastMessage && <Toast message={toastMessage} />}
           {renderTopMessage()}
           {renderForm()}
         </AuthContainer>
