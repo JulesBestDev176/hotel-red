@@ -7,12 +7,11 @@ import {
   deleteHotel,
 } from "../controllers/hotelController.js";
 import { protect } from "../middlewares/auth.js";
-import upload from "../middlewares/upload.js";
 
 const router = express.Router();
 
 // Route pour créer un hotel
-router.post("/addHotel", protect, upload.single("image"), createHotel);
+router.post("/addHotel", protect, createHotel);
 // Route pour lister tous les hotels
 router.get("/hotels", protect, getHotels);
 // Route pour afficher un hotel
