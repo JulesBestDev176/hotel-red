@@ -18,35 +18,31 @@ dotenv.config();
 
 const app = express();
 
-// CORS Configuration
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || "https://hotel-red-1.onrender.com",
+  origin: [
+    "https://hotel-red-1.onrender.com",
+    "http://localhost:3000",
+    process.env.PORT,
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
 
-// Use CORS
 app.use(cors(corsOptions));
 
-// Security Headers with Helmet
 app.use(helmet());
 
-// Middleware to parse cookies
 app.use(cookieParser());
 
-// Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-// API Routes
 app.use("/api", userRoutes);
 app.use("/api", deviseRoutes);
 app.use("/api", hotelRoutes);
 
-// Check for image existence
 app.get("/check-image/:imageName", (req, res) => {
   const { imageName } = req.params;
   const filePath = path.join(
@@ -63,7 +59,11 @@ app.get("/check-image/:imageName", (req, res) => {
   });
 });
 
-// Basic route for testing
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 app.get("/", (req, res) => {
   res.send("Bienvenue sur le serveur !");
 });
@@ -72,6 +72,5 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   connectDB();
-  console.log("Chemin : " + path.join(__dirname, "public/assets"));
   console.log(`Serveur démarré à http://localhost:${PORT}`);
 });
