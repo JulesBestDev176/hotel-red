@@ -57,10 +57,13 @@ const Hotel = ({ hotel }) => {
   useEffect(() => {
     console.log(hotel.image);
   }, []);
+
+  const imageUrl = `https://hotel-red.onrender.com/assets/images/hotel/${hotel.image}`;
+
   return (
     <HotelDiv>
       <Image>
-        <img src={`/assets/images/hotel/${hotel.image}`} alt={hotel.nom} />
+        <img src={imageUrl} alt={hotel.nom} />
       </Image>
       <Info>
         <div className="adresse">{hotel.adresse}</div>
