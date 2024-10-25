@@ -18,7 +18,7 @@ export const createHotel = async (req, res) => {
   }
 
   const imageName = req.file.filename || "";
-  const imageUrl = `${process.env.PORT}/public/assets/images/hotel/${imageName}`;
+  const imageUrl = `/assets/images/hotel/${imageName}`;
 
   const newHotel = new Hotel({
     nom: hotel.nom,
