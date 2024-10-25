@@ -32,6 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("Bienvenue sur le serveur !");
 });
+app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 app.use("/api", userRoutes);
 app.use("/api", deviseRoutes);
 app.use("/api", hotelRoutes);

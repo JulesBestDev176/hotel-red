@@ -18,6 +18,7 @@ export const createHotel = async (req, res) => {
   }
 
   const imageName = req.file.filename || "";
+  const imageUrl = `${process.env.PORT}/public/assets/images/hotel/${imageName}`;
 
   const newHotel = new Hotel({
     nom: hotel.nom,
@@ -26,15 +27,23 @@ export const createHotel = async (req, res) => {
     tel: hotel.tel,
     prix: hotel.prix,
     devise: hotel.devise,
-    image: imageName,
+    image: imageUrl, // Stocke seulement le nom de l'image
     userId: req.user._id,
   });
 
   try {
     await newHotel.save();
-    res.status(201).json({ success: true, data: newHotel });
+
+    // Créer l'URL de l'image
+    const imageUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/assets/images/hotel/${imageName}`;
+
+    res
+      .status(201)
+      .json({ success: true, data: { ...newHotel._doc, image: imageUrl } });
   } catch (error) {
-    console.log(`Erreur lors de la creation de l'hotel: ${error.message}`);
+    console.log(`Erreur lors de la création de l'hôtel: ${error.message}`);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
