@@ -7,6 +7,7 @@ import {
   deleteHotel,
 } from "../controllers/hotelController.js";
 import { protect } from "../middlewares/auth.js";
+import { upload } from "../middlewares/upload.js";
 
 const router = express.Router();
 
