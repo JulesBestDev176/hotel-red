@@ -34,9 +34,6 @@ export const createHotel = async (req, res) => {
   try {
     await newHotel.save();
 
-    // Créer l'URL de l'image
-    const imagePath = `assets/images/hotel/${imageName}`;
-
     res
       .status(201)
       .json({ success: true, data: { ...newHotel._doc, image: imageUrl } });
