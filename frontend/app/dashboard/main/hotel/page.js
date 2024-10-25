@@ -60,7 +60,10 @@ const Hotel = ({ hotel }) => {
   return (
     <HotelDiv>
       <Image>
-        <img src={`${hotel.image}`} alt={hotel.nom} />
+        <img
+          src={`/public/assets/images/hotel/${hotel.image}`}
+          alt={hotel.nom}
+        />
       </Image>
       <Info>
         <div className="adresse">{hotel.adresse}</div>
