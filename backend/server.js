@@ -7,6 +7,7 @@ import { connectDB } from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import deviseRoutes from "./routes/deviseRoutes.js";
 import hotelRoutes from "./routes/hotelRoutes.js";
+import path from "path";
 
 dotenv.config();
 
