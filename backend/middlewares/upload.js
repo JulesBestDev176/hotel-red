@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename);
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadPath = path.join(__dirname, "../public/assets/images/hotel"); // chemin local sur le serveur
+    console.log("Upload Path:" + uploadPath);
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
