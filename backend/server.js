@@ -57,7 +57,7 @@ app.use("/api", hotelRoutes);
 // Lancer le serveur
 app.listen(process.env.PORT || 5000, () => {
   connectDB();
-  console.log("path : " + path.join(__dirname, "../public/assets"));
+  console.log("path : " + path.join(__dirname, "public/assets"));
   console.log(
     `Server started at ${
       process.env.PORT
