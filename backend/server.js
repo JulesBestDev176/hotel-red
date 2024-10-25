@@ -19,16 +19,24 @@ const app = express();
 
 // Options de configuration CORS
 const corsOptions = {
-  origin: [
-    "https://hotel-red-1.onrender.com",
-    "https://hotel-red-1.onrender.com",
-  ], // Autoriser cette origine
+  origin: "https://hotel-red-1.onrender.com",
   methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
   credentials: true, // Si vous utilisez des cookies
 };
 
 // Utilisation de CORS
 app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://hotel-red-1.onrender.com");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 app.use(helmet());
 app.use(cookieParser());
