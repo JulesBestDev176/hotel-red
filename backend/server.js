@@ -9,6 +9,7 @@ import deviseRoutes from "./routes/deviseRoutes.js";
 import hotelRoutes from "./routes/hotelRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import fs from "fs"; // Pour vérifier l'existence des fichiers
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,29 +18,31 @@ dotenv.config();
 
 const app = express();
 
-// Options de configuration CORS
+// Configuration CORS
 const corsOptions = {
   origin: "https://hotel-red-1.onrender.com",
-  methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, // Si vous utilisez des cookies
 };
 
 // Utilisation de CORS
 app.use(cors(corsOptions));
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://hotel-red-1.onrender.com");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
+// Options de sécurité Helmet
+const helmetOptions = {
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https://hotel-red-1.onrender.com"],
+      scriptSrc: ["'self'", "https://your-script-source.com"], // Ajoutez d'autres sources si nécessaire
+      styleSrc: ["'self'", "https://your-style-source.com"], // Ajoutez d'autres sources si nécessaire
+    },
+  },
+};
 
-app.use(helmet());
+app.use(helmet(helmetOptions));
 app.use(cookieParser());
+
 // Middleware pour traiter les données JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,17 +52,37 @@ app.get("/", (req, res) => {
   res.send("Bienvenue sur le serveur !");
 });
 
+// Middleware pour servir les fichiers statiques
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+
+// Routes API
 app.use("/api", userRoutes);
 app.use("/api", deviseRoutes);
 app.use("/api", hotelRoutes);
 
+// Vérification de l'existence d'une image
+app.get("/check-image/:imageName", (req, res) => {
+  const { imageName } = req.params;
+  const filePath = path.join(
+    __dirname,
+    "public/assets/images/hotel",
+    imageName
+  );
+
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      return res.status(404).send("Image non trouvée");
+    }
+    res.send("Image existe");
+  });
+});
+
 // Lancer le serveur
 app.listen(process.env.PORT || 5000, () => {
   connectDB();
-  console.log("path : " + path.join(__dirname, "public/assets"));
+  console.log("Chemin : " + path.join(__dirname, "public/assets"));
   console.log(
-    `Server started at ${
+    `Serveur démarré à ${
       process.env.PORT
         ? "http://localhost:" + process.env.PORT
         : "http://localhost:5000"
