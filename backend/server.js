@@ -17,7 +17,7 @@ dotenv.config();
 
 const app = express();
 
-// Options de configuration CORS
+// Configuration CORS
 const corsOptions = {
   origin: "https://hotel-red-1.onrender.com",
   methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
@@ -27,19 +27,21 @@ const corsOptions = {
 // Utilisation de CORS
 app.use(cors(corsOptions));
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://hotel-red-1.onrender.com");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
+// Options de sécurité Helmet
+const helmetOptions = {
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https://hotel-red-1.onrender.com"],
+      scriptSrc: ["'self'", "https://your-script-source.com"], // Ajoutez d'autres sources si nécessaire
+      styleSrc: ["'self'", "https://your-style-source.com"], // Ajoutez d'autres sources si nécessaire
+    },
+  },
+};
 
-app.use(helmet());
+app.use(helmet(helmetOptions));
 app.use(cookieParser());
+
 // Middleware pour traiter les données JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -49,7 +51,10 @@ app.get("/", (req, res) => {
   res.send("Bienvenue sur le serveur !");
 });
 
+// Middleware pour servir les fichiers statiques
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+
+// Routes API
 app.use("/api", userRoutes);
 app.use("/api", deviseRoutes);
 app.use("/api", hotelRoutes);
@@ -57,7 +62,7 @@ app.use("/api", hotelRoutes);
 // Lancer le serveur
 app.listen(process.env.PORT || 5000, () => {
   connectDB();
-  console.log("path : " + path.join(__dirname, "../public/assets"));
+  console.log("Chemin : " + path.join(__dirname, "public/assets"));
   console.log(
     `Server started at ${
       process.env.PORT
