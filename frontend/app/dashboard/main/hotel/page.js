@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 const HotelDiv = styled.div`
@@ -54,6 +54,9 @@ const Hotel = ({ hotel }) => {
   if (!hotel) {
     return <div>Chargement...</div>; // État de chargement ou message approprié
   }
+  useEffect(() => {
+    console.log(hotel.image);
+  }, []);
   return (
     <HotelDiv>
       <Image>
