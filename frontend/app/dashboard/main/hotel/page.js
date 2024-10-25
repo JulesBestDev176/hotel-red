@@ -57,10 +57,7 @@ const Hotel = ({ hotel }) => {
   return (
     <HotelDiv>
       <Image>
-        <img
-          src={`https://hotel-red.onrender.com/assets/images/hotel/${hotel.image}`}
-          alt={hotel.nom}
-        />
+        <img src={`${hotel.image}`} alt={hotel.nom} />
       </Image>
       <Info>
         <div className="adresse">{hotel.adresse}</div>
