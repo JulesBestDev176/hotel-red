@@ -2,14 +2,14 @@ import express from "express";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import cors from "cors"; // Assurez-vous d'importer cors
+import cors from "cors";
 import { connectDB } from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import deviseRoutes from "./routes/deviseRoutes.js";
 import hotelRoutes from "./routes/hotelRoutes.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import fs from "fs"; // Pour vérifier l'existence des fichiers
+import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,49 +18,35 @@ dotenv.config();
 
 const app = express();
 
-// Configuration CORS
+// CORS Configuration
 const corsOptions = {
-  origin: "https://hotel-red-1.onrender.com",
+  origin: process.env.CORS_ORIGIN || "https://hotel-red-1.onrender.com",
   methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true, // Si vous utilisez des cookies
+  credentials: true,
 };
 
-// Utilisation de CORS
+// Use CORS
 app.use(cors(corsOptions));
 
-// Options de sécurité Helmet
-const helmetOptions = {
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https://hotel-red-1.onrender.com"],
-      scriptSrc: ["'self'", "https://your-script-source.com"], // Ajoutez d'autres sources si nécessaire
-      styleSrc: ["'self'", "https://your-style-source.com"], // Ajoutez d'autres sources si nécessaire
-    },
-  },
-};
+// Security Headers with Helmet
+app.use(helmet());
 
-app.use(helmet(helmetOptions));
+// Middleware to parse cookies
 app.use(cookieParser());
 
-// Middleware pour traiter les données JSON
+// Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.get("/", (req, res) => {
-  res.send("Bienvenue sur le serveur !");
-});
-
-// Middleware pour servir les fichiers statiques
+// Serve static files
 app.use("/assets", express.static(path.join(__dirname, "public/assets")));
 
-// Routes API
+// API Routes
 app.use("/api", userRoutes);
 app.use("/api", deviseRoutes);
 app.use("/api", hotelRoutes);
 
-// Vérification de l'existence d'une image
+// Check for image existence
 app.get("/check-image/:imageName", (req, res) => {
   const { imageName } = req.params;
   const filePath = path.join(
@@ -77,15 +63,15 @@ app.get("/check-image/:imageName", (req, res) => {
   });
 });
 
-// Lancer le serveur
-app.listen(process.env.PORT || 5000, () => {
+// Basic route for testing
+app.get("/", (req, res) => {
+  res.send("Bienvenue sur le serveur !");
+});
+
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
   connectDB();
   console.log("Chemin : " + path.join(__dirname, "public/assets"));
-  console.log(
-    `Serveur démarré à ${
-      process.env.PORT
-        ? "http://localhost:" + process.env.PORT
-        : "http://localhost:5000"
-    }`
-  );
+  console.log(`Serveur démarré à http://localhost:${PORT}`);
 });
