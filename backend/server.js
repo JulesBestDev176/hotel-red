@@ -8,6 +8,7 @@ import userRoutes from "./routes/userRoutes.js";
 import deviseRoutes from "./routes/deviseRoutes.js";
 import hotelRoutes from "./routes/hotelRoutes.js";
 import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
