@@ -21,7 +21,7 @@ const Droite = styled.div`
 `;
 
 const Dashboard = ({ page }) => {
-  const [activePage, setActivePage] = useState(page || "dashboard");
+  const [activePage, setActivePage] = useState(page ? page : "dashboard");
   const [user, setUser] = useState({});
 
   useEffect(() => {
