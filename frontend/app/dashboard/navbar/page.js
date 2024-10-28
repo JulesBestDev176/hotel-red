@@ -146,7 +146,7 @@ const Ajout = styled.div`
 
 const Navbar = ({ activePage }) => {
   const router = useRouter();
-  const { hotels, loading, error, fetchHotels } = useHotels();
+
   const [hotel, setHotel] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
