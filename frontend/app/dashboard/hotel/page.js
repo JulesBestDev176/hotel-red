@@ -115,6 +115,9 @@ const Button = styled.button`
 const Hotel = ({ isOpen, onClose }) => {
   // const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
+  if (!router) {
+    return null;
+  }
   const [nom, setNom] = useState("");
   const [adresse, setAdresse] = useState("");
   const [email, setEmail] = useState("");
