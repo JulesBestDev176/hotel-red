@@ -5,6 +5,7 @@ import styled from "styled-components";
 const HotelDiv = styled.div`
   width: calc(30% - 20px);
   margin-bottom: 20px;
+  margin-right: 20px;
   height: 300px;
   background-color: white;
   border: none;

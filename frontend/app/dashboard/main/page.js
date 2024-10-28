@@ -11,7 +11,7 @@ import Hotel from "./hotel/page";
 const MainDiv = styled.div`
   padding: 20px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
   overflow-y: auto;
 `;
