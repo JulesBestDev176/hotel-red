@@ -19,7 +19,7 @@ const app = express();
 
 // Configuration CORS
 const corsOptions = {
-  origin: "https://hotel-red-1.onrender.com",
+  origin: ["https://hotel-red-1.onrender.com", "http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE"], // Méthodes autorisées
   credentials: true, // Si vous utilisez des cookies
 };
@@ -60,7 +60,6 @@ app.use("/api", hotelRoutes);
 // Lancer le serveur
 app.listen(process.env.PORT || 5000, () => {
   connectDB();
-  console.log("Chemin : " + path.join(__dirname, "public/assets"));
   console.log(
     `Server started at ${
       process.env.PORT

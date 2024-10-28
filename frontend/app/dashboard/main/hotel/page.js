@@ -55,12 +55,12 @@ const Hotel = ({ hotel }) => {
     return <div>Chargement...</div>; // État de chargement ou message approprié
   }
 
-  const imageUrl = `https://hotel-red.onrender.com/assets/images/hotel/${hotel.image}`;
+  // const imageUrl = `https://hotel-red.onrender.com/assets/images/hotel/${hotel.image}`;
 
   return (
     <HotelDiv>
       <Image>
-        <img src={imageUrl} alt={hotel.nom} />
+        <img src={hotel.image} alt={hotel.nom} />
       </Image>
       <Info>
         <div className="adresse">{hotel.adresse}</div>

@@ -1,9 +1,11 @@
 import Hotel from "../models/hotel.model.js";
-
+import cloudinary from "../utils/cloudinary.js";
+import upload from "../middlewares/upload.js";
 // Créer un hotel
 export const createHotel = async (req, res) => {
   const hotel = req.body;
 
+  // Validation des champs
   if (
     !hotel.nom ||
     !hotel.email ||
@@ -17,8 +19,10 @@ export const createHotel = async (req, res) => {
       .json({ success: false, message: "Veuillez remplir tous les champs" });
   }
 
-  const imageName = req.file.filename || "";
-  const imageUrl = `${imageName}`;
+  const result = await cloudinary.uploader.upload(req.file.path);
+
+  // Récupération de l'URL de l'image uploadée sur Cloudinary
+  const imageUrl = result.secure_url || ""; // `req.file.path` contient l'URL Cloudinary
 
   const newHotel = new Hotel({
     nom: hotel.nom,
@@ -27,23 +31,17 @@ export const createHotel = async (req, res) => {
     tel: hotel.tel,
     prix: hotel.prix,
     devise: hotel.devise,
-    image: imageUrl, // Stocke seulement le nom de l'image
+    image: imageUrl, // Stocke l'URL de l'image Cloudinary
     userId: req.user._id,
   });
 
   try {
     await newHotel.save();
-    const imageUrl = `${req.protocol}://${req.get(
-      "host"
-    )}/assets/images/hotel/${imageName}`;
-
-    res
-      .status(201)
-      .json({ success: true, data: { ...newHotel._doc, image: imageUrl } });
-    console.log("img url : ", imageUrl);
+    res.status(201).json({ success: true, data: newHotel });
+    console.log("Image URL:", imageUrl);
   } catch (error) {
     console.log(`Erreur lors de la création de l'hôtel: ${error.message}`);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: "Erreur serveur" });
   }
 };
 
