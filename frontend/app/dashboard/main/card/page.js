@@ -5,6 +5,7 @@ import styled from "styled-components";
 const CardDiv = styled.div`
   width: calc(33.33% - 40px);
   margin-bottom: 20px;
+  margin-right: 20px;
   height: 100px;
   background-color: white;
   border: none;
