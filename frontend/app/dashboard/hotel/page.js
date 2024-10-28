@@ -114,7 +114,7 @@ const Button = styled.button`
 
 const Hotel = ({ isOpen, onClose }) => {
   // const [isMounted, setIsMounted] = useState(false);
-  // const router = useRouter();
+  const router = useRouter();
   const [nom, setNom] = useState("");
   const [adresse, setAdresse] = useState("");
   const [email, setEmail] = useState("");
@@ -181,7 +181,15 @@ const Hotel = ({ isOpen, onClose }) => {
 
     try {
       const result = await addHotel(formData);
-      // router.push("/dashboard");
+
+      setNom("");
+      setAdresse("");
+      setEmail("");
+      setTel("");
+      setPrix("");
+      setImage("");
+      router.push("/dashboard?value=hotel");
+
       console.log("Hotel ajouté avec succés:", result);
       onClose();
     } catch (error) {

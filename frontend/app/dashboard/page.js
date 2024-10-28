@@ -20,8 +20,8 @@ const Droite = styled.div`
   margin: 0;
 `;
 
-const Dashboard = () => {
-  const [activePage, setActivePage] = useState("dashboard");
+const Dashboard = ({ page }) => {
+  const [activePage, setActivePage] = useState(page || "dashboard");
   const [user, setUser] = useState({});
 
   useEffect(() => {

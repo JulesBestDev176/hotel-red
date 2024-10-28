@@ -54,9 +54,6 @@ const Hotel = ({ hotel }) => {
   if (!hotel) {
     return <div>Chargement...</div>; // État de chargement ou message approprié
   }
-  useEffect(() => {
-    console.log(hotel.image);
-  }, []);
 
   const imageUrl = `https://hotel-red.onrender.com/assets/images/hotel/${hotel.image}`;
 
