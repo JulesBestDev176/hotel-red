@@ -8,7 +8,6 @@ import { signout } from "@/app/services/api";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Hotel from "../hotel/page";
-import useHotels from "./useHotels";
 
 const NavbarDiv = styled.div`
   background-color: white;

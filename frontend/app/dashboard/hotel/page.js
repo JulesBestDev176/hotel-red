@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaRegImage } from "react-icons/fa";
 import { addHotel } from "@/app/services/api";
-import useHotels from "./useHotels";
+import useHotels from "@/app/services/useHotels";
 
 const Container = styled.div`
   position: absolute;
