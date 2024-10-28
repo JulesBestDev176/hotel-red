@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaRegImage } from "react-icons/fa";
 import { addHotel } from "@/app/services/api";
-import useHotels from "@/app/services/useHotels";
 
 const Container = styled.div`
   position: absolute;
@@ -190,7 +189,7 @@ const Hotel = ({ isOpen, onClose }) => {
       setImage("");
 
       console.log("Hotel ajouté avec succés:", result);
-      await fetchHotels();
+      location.reload();
       onClose();
     } catch (error) {
       console.error("Erreur lors de l'ajout de l'hotel:", error);
