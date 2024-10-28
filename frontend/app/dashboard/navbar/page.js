@@ -4,10 +4,11 @@ import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { LuLogOut } from "react-icons/lu";
-import { listHotel, signout } from "@/app/services/api";
+import { signout } from "@/app/services/api";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Hotel from "../hotel/page";
+import useHotels from "./useHotels";
 
 const NavbarDiv = styled.div`
   background-color: white;
@@ -145,21 +146,9 @@ const Ajout = styled.div`
 
 const Navbar = ({ activePage }) => {
   const router = useRouter();
+  const { hotels, loading, error, fetchHotels } = useHotels();
   const [hotel, setHotel] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchHotels = async () => {
-      try {
-        const hotelData = await listHotel();
-        setHotel(hotelData.data.length);
-      } catch (error) {
-        console.error("Error fetching hotels:", error);
-      }
-    };
-
-    fetchHotels();
-  }, []);
 
   const handleLogout = async () => {
     try {
@@ -216,11 +205,7 @@ const Navbar = ({ activePage }) => {
         )}
       </Top>
 
-      <Hotel
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        refreshPage={fetchHotels}
-      />
+      <Hotel isOpen={isModalOpen} onClose={closeModal} />
     </NavbarDiv>
   );
 };
