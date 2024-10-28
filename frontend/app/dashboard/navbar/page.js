@@ -216,7 +216,11 @@ const Navbar = ({ activePage }) => {
         )}
       </Top>
 
-      <Hotel isOpen={isModalOpen} onClose={closeModal} />
+      <Hotel
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        refreshPage={fetchHotels}
+      />
     </NavbarDiv>
   );
 };

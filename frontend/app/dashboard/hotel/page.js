@@ -112,7 +112,7 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const Hotel = ({ isOpen, onClose }) => {
+const Hotel = ({ isOpen, onClose, refreshPage }) => {
   // const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
   const [nom, setNom] = useState("");
@@ -191,10 +191,7 @@ const Hotel = ({ isOpen, onClose }) => {
 
       console.log("Hotel ajouté avec succés:", result);
       onClose();
-      setTimeout(() => {
-        router.reload();
-      }, 5000);
-      router.push("/dashboard?value=hotel");
+      refreshPage();
     } catch (error) {
       console.error("Erreur lors de l'ajout de l'hotel:", error);
     }
