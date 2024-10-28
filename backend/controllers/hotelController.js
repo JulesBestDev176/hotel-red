@@ -40,6 +40,7 @@ export const createHotel = async (req, res) => {
     res
       .status(201)
       .json({ success: true, data: { ...newHotel._doc, image: imageUrl } });
+    console.log("img url : ", imageUrl);
   } catch (error) {
     console.log(`Erreur lors de la création de l'hôtel: ${error.message}`);
     res.status(500).json({ success: false, message: "Server error" });
