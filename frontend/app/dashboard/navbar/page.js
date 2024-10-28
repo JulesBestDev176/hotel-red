@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { LuLogOut } from "react-icons/lu";
-import { signout } from "@/app/services/api";
+import { listHotel, signout } from "@/app/services/api";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Hotel from "../hotel/page";
@@ -157,6 +157,18 @@ const Navbar = ({ activePage }) => {
       console.error("Erreur lors de la déconnexion : ", error);
     }
   };
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        const hotelData = await listHotel();
+        setHotel(hotelData.data.length);
+      } catch (error) {
+        console.error("Error fetching hotels:", error);
+      }
+    };
+
+    fetchHotels();
+  }, []);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
