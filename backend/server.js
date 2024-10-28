@@ -29,18 +29,15 @@ app.use(cors(corsOptions));
 
 // Options de sécurité Helmet
 const helmetOptions = {
-  contentSecurityPolicy: false,
-  // {
-  //   directives: {
-  //     defaultSrc: ["'self'"],
-  //     imgSrc: ["'self'", "data:", "https://hotel-red-1.onrender.com"],
-  //     scriptSrc: ["'self'", "https://your-script-source.com"], // Ajoutez d'autres sources si nécessaire
-  //     styleSrc: ["'self'", "https://your-style-source.com"], // Ajoutez d'autres sources si nécessaire
-  //   },
-  // },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https://hotel-red-1.onrender.com"],
+    },
+  },
 };
 
-app.use(helmet(helmetOptions));
+// app.use(helmet(helmetOptions));
 app.use(cookieParser());
 
 // Middleware pour traiter les données JSON
