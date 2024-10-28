@@ -191,8 +191,8 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
 
       console.log("Hotel ajouté avec succés:", result);
       onClose();
-      router.push("/dashboard?value=hotel");
       location.reload();
+      router.push("/dashboard?value=hotel");
     } catch (error) {
       console.error("Erreur lors de l'ajout de l'hotel:", error);
     }
