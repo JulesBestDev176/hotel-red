@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { FaArrowLeft } from "react-icons/fa";
 import { FaRegImage } from "react-icons/fa";
 import { addHotel } from "@/app/services/api";
+import { useRouter } from "next/navigation";
 
 const Container = styled.div`
   position: absolute;
@@ -111,9 +112,9 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-const Hotel = ({ isOpen, onClose }) => {
+const Hotel = ({ isOpen, onClose, refreshPage }) => {
   // const [isMounted, setIsMounted] = useState(false);
-  const { fetchHotels } = useHotels();
+  const router = useRouter();
   const [nom, setNom] = useState("");
   const [adresse, setAdresse] = useState("");
   const [email, setEmail] = useState("");
@@ -189,8 +190,9 @@ const Hotel = ({ isOpen, onClose }) => {
       setImage("");
 
       console.log("Hotel ajouté avec succés:", result);
-      location.reload();
       onClose();
+      router.push("/dashboard?value=hotel");
+      location.reload();
     } catch (error) {
       console.error("Erreur lors de l'ajout de l'hotel:", error);
     }
