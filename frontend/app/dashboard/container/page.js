@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 import Navbar from "../navbar/page";
 import Main from "../main/page";
+import useHotels from "@/app/services/useHotels";
 
 const ContainerDiv = styled.div`
   width: 100%;
@@ -16,10 +17,16 @@ const ContainerDiv = styled.div`
 `;
 
 const Container = ({ activePage }) => {
+  const { setName, hotels, loading, error } = useHotels();
   return (
     <ContainerDiv>
-      <Navbar activePage={activePage} />
-      <Main activePage={activePage} />
+      <Navbar activePage={activePage} setHotelName={setName} />
+      <Main
+        activePage={activePage}
+        hotels={hotels}
+        loading={loading}
+        error={error}
+      />
     </ContainerDiv>
   );
 };

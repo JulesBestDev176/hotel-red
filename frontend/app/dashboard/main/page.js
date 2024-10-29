@@ -7,6 +7,7 @@ import { TbLetterP } from "react-icons/tb";
 import { FaUserFriends } from "react-icons/fa";
 import { listHotel } from "@/app/services/api";
 import Hotel from "./hotel/page";
+import useHotels from "@/app/services/useHotels";
 
 const MainDiv = styled.div`
   padding: 20px;
@@ -16,7 +17,7 @@ const MainDiv = styled.div`
   overflow-y: auto;
 `;
 
-const Main = ({ activePage }) => {
+const Main = ({ activePage, hotels, loading, error }) => {
   const cards = [
     {
       logo: <FaEnvelopeOpen />,
@@ -62,30 +63,19 @@ const Main = ({ activePage }) => {
     },
   ];
 
-  const [hotels, setHotels] = useState(null);
-
-  useEffect(() => {
-    const fetchHotels = async () => {
-      try {
-        const hotelData = await listHotel();
-        console.log("Données d'hôtel récupérées :", hotelData);
-        setHotels(hotelData);
-      } catch (error) {
-        console.error("Error recuperation hotels:", error);
-      }
-    };
-
-    fetchHotels();
-  }, []);
-
   return (
     <MainDiv>
-      {activePage === "dashboard"
-        ? cards.map((c, index) => <Card key={index} card={c} />)
-        : hotels &&
-          hotels.data.map((hotel, index) => (
-            <Hotel key={index} hotel={hotel} />
-          ))}
+      {activePage === "dashboard" ? (
+        cards.map((c, index) => <Card key={index} card={c} />)
+      ) : loading ? (
+        <p>Chargement des hôtels...</p>
+      ) : error ? (
+        <p>Erreur lors de la récupération des hôtels: {error.message}</p>
+      ) : hotels && hotels.length > 0 ? (
+        hotels.map((hotel, index) => <Hotel key={index} hotel={hotel} />)
+      ) : (
+        <p>Aucun hôtel trouvé.</p>
+      )}
     </MainDiv>
   );
 };

@@ -143,10 +143,11 @@ const Ajout = styled.div`
   }
 `;
 
-const Navbar = ({ activePage }) => {
+const Navbar = ({ activePage, setHotelName }) => {
   const router = useRouter();
 
   const [hotel, setHotel] = useState(0);
+  const [name, setName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -170,6 +171,11 @@ const Navbar = ({ activePage }) => {
     fetchHotels();
   }, []);
 
+  const handleChange = (e) => {
+    setName(e.target.value); // Met à jour l’état `name` localement
+    setHotelName(e.target.value); // Met à jour le nom dans `useHotels`
+  };
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -182,7 +188,12 @@ const Navbar = ({ activePage }) => {
         <Menu>
           <Form>
             <SearchIcon />
-            <input type="text" placeholder="Recherher..." />
+            <input
+              type="text"
+              value={name}
+              onChange={handleChange}
+              placeholder="Recherher..."
+            />
           </Form>
           <div className="notif">
             <NotificationIcon />
