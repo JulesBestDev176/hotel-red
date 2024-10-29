@@ -1,8 +1,8 @@
 import axios from "axios";
 
 // ""
-// const API_URL = "https://hotel-red.onrender.com/api";
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://hotel-red.onrender.com/api";
+// const API_URL = "http://localhost:5000/api";
 
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -104,6 +104,32 @@ export const addHotel = async (hotelData) => {
     return response.data;
   } catch (error) {
     console.error("Erreur lors de l'ajout de l'hôtel : ", error);
+    throw error;
+  }
+};
+
+// Envoyer un mail
+
+export const sendResetEmail = async (email) => {
+  try {
+    const response = await apiClient.post("/send-mail", email);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de l'envoi de l'email : ", error);
+    throw error;
+  }
+};
+
+export const changePassword = async ({ passwords }, email) => {
+  try {
+    const response = await apiClient.patch(`/change-password`, {
+      password1: passwords.password1,
+      password2: passwords.password2,
+      email: email,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erreur la modification du mot de passe : ", error);
     throw error;
   }
 };

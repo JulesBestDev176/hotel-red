@@ -4,6 +4,8 @@ import {
   signin,
   signout,
   getCurrentUser,
+  changePassword,
+  sendMailChangePassword,
   //   sendCodeVerification,
 } from "../controllers/userController.js";
 import { protect } from "../middlewares/auth.js";
@@ -22,7 +24,10 @@ router.post("/signout", protect, signout);
 // Route pour recuperer  l'utilisateur connecté
 router.get("/getUser", protect, getCurrentUser);
 
-// Route pour envoyer code
+// Route pour modifier le mot de passe
+router.patch("/change-password", changePassword);
+// Route pour envoyer mail
+router.post("/send-mail", sendMailChangePassword);
 // router.patch("/sendCode", sendCodeVerification);
 
 export default router;

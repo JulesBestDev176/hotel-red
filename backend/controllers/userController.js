@@ -1,12 +1,17 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-import { signupSchema, signinSchema } from "../middlewares/validators.js";
+import {
+  signupSchema,
+  signinSchema,
+  changePasswordSchema,
+} from "../middlewares/validators.js";
 import {
   comparePassword,
   hashPassword,
   hmacProcess,
 } from "../utils/hashing.js";
 import { transporter } from "../middlewares/sendMail.js";
+import nodemailer from "nodemailer";
 
 // Generer token
 const generateToken = (id, email, verified) => {
@@ -137,46 +142,56 @@ export const signout = async (req, res) => {
   });
 };
 
-// Envoie de code de verification
+// Envoie d'email
 
-// export const sendCodeVerification = async (res, req) => {
-//   console.log(req.body);
-//   const { email } = req.body;
+export const sendMailChangePassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    if (!email) {
+      console.log("veuillez remplir tous les champs");
+      return res
+        .status(400)
+        .json({ success: false, message: "Veuillez remplir tous les champs" });
+    }
 
-//   try {
-//     if (!email) {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: "Veuillez remplir tous les champs" });
-//     }
+    const userExist = await User.findOne({ email });
+    if (!userExist) {
+      console.log("l'utilisateur n'existe pas");
+      return res
+        .status(401)
+        .json({ success: false, message: "Utilisateur non trouvé." });
+    }
 
-//     const userExist = await User.findOne({ email }).select("+password");
-//     if (!userExist) {
-//       return res
-//         .status(401)
-//         .json({ success: false, message: "L'utilisateur non trouvé." });
-//     }
+    const resetLink = `http://localhost:3000/authentification/changePassword?email=${encodeURIComponent(
+      email
+    )}`;
 
-//     const code = Math.floor(Math.random() * 1000000).toString();
-//     let info = await transporter.sendMail({
-//       from: process.env.NODE_CODE_SENDING_MAIL_ADDRESS,
-//       to: userExist.email,
-//       subject: "Code de vérification",
-//       html: "<h1>" + code + "</h1>",
-//     });
+    const info = await transporter.sendMail({
+      from: process.env.NODE_CODE_SENDING_MAIL_ADDRESS,
+      to: email,
+      subject: "Réinitialisation de votre mot de passe",
+      html: `<p>Bonjour ${userExist.prenom} ${userExist.nom},</p>
+             <p>Cliquez sur le lien suivant pour réinitialiser votre mot de passe :</p>
+             <a href="${resetLink}">${resetLink}</a>`,
+    });
 
-//     if (info.accepted[0] === userExist.email) {
-//       const hashedCode = hmacProcess(
-//         code,
-//         process.env.HMAC_VERIFICATION_CODE_SECRET
-//       );
-//       userExist.forgotPasswordCode = hashedCode;
-//       await userExist.save();
-//       return res.status(200).json({ success: true, message: "Code envoyé" });
-//     }
-//     res.status(400).json({ success: false, message: "Code non envoyé" });
-//   } catch (error) {}
-// };
+    if (info.accepted[0] === userExist.email) {
+      return res
+        .status(200)
+        .json({ success: true, message: "Lien de réinitialisation envoyé." });
+      console.log("lien envoye");
+    }
+    console.log("lien non envoye");
+    return res
+      .status(500)
+      .json({ success: false, message: "Échec de l'envoi de l'e-mail." });
+  } catch (error) {
+    console.error("Erreur d'envoi d'email :", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Erreur interne du serveur" });
+  }
+};
 
 // Recuperer user
 
@@ -198,5 +213,51 @@ export const getCurrentUser = async (req, res) => {
       `Erreur lors de la récupération de l'utilisateur: ${error.message}`
     );
     res.status(500).json({ success: false, message: "Erreur serveur" });
+  }
+};
+
+// ChangePassword
+export const changePassword = async (req, res) => {
+  const { password1, password2, email } = req.body;
+  if (!email) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Email manquant dans l'URL" });
+  }
+  if (!password1 || !password2) {
+    return res.status(400).json({ message: "Tous les champs sont requis." });
+  }
+  try {
+    const { error, value } = changePasswordSchema.validate({
+      password1,
+      password2,
+    });
+
+    if (error) {
+      return res
+        .status(401)
+        .json({ success: false, message: error.details[0].message });
+    }
+    if (password1 !== password2) {
+      return res.status(401).json({
+        success: false,
+        message: "Les 2 mots de passe ne sont pas identiques",
+      });
+    }
+    const existingUser = await User.findOne({ email }).select("+password");
+    if (!existingUser) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Uilisateur non trouvé" });
+    }
+
+    const hashedPassword = await hashPassword(password1, 12);
+    existingUser.password = hashedPassword;
+    await existingUser.save();
+    return res
+      .status(200)
+      .json({ success: true, message: "Mot de passe modifie avec succées" });
+  } catch (error) {
+    console.log(error);
   }
 };

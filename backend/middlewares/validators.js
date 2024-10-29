@@ -29,3 +29,16 @@ export const signinSchema = Joi.object({
       new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{6,20}$")
     ),
 });
+
+export const changePasswordSchema = Joi.object({
+  password1: Joi.string()
+    .required()
+    .pattern(
+      new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{6,20}$")
+    ),
+  password2: Joi.string()
+    .required()
+    .pattern(
+      new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()]).{6,20}$")
+    ),
+});

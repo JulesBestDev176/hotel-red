@@ -1,7 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { login, signup, signout } from "../services/api";
+import {
+  login,
+  signup,
+  signout,
+  sendResetEmail,
+  changePassword,
+} from "../services/api";
 import { useRouter } from "next/navigation";
 import Toast from "./Toast";
 
@@ -126,7 +132,10 @@ const Form = styled.form`
 const AuthForm = ({ type }) => {
   const router = useRouter();
   const [email, setEmail] = useState("");
+  const [emailReset, setEmailReset] = useState("");
   const [password, setPassword] = useState("");
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
   const [nom, setNom] = useState("");
   const [error, setError] = useState("");
   const [toastMessage, setToastMessage] = useState("");
@@ -163,6 +172,40 @@ const AuthForm = ({ type }) => {
         console.log(error);
         setToastMessage(
           "Erreur lors de l'inscription. Vérifiez vos informations."
+        );
+        setColor("red");
+      }
+    } else if (type === "changePassword") {
+      const passwords = {
+        password1,
+        password2,
+      };
+      const urlParams = new URLSearchParams(window.location.search);
+      const email = urlParams.get("email");
+      try {
+        const result = await changePassword({ passwords }, email);
+        setColor("green");
+        router.push("../");
+      } catch (error) {
+        setPassword1("");
+        setPassword2("");
+        setPassword("");
+        console.log(error);
+        setToastMessage(
+          "Erreur lors de l'inscription. Vérifiez vos informations."
+        );
+        setColor("red");
+      }
+    } else if (type === "password") {
+      try {
+        const result = await sendResetEmail({ email: emailReset });
+
+        setColor("green");
+        setEmailReset("");
+      } catch (error) {
+        setEmailReset("");
+        setToastMessage(
+          "Erreur lors de la modification. Vérifiez vos informations."
         );
         setColor("red");
       }
@@ -224,10 +267,36 @@ const AuthForm = ({ type }) => {
             <button type="submit">Se connecter</button>
           </Form>
         );
+      case "changePassword":
+        return (
+          <Form onSubmit={handleSubmit}>
+            <input
+              type="password"
+              placeholder="Mot de passe"
+              required
+              value={password1}
+              onChange={(e) => setPassword1(e.target.value)}
+            />
+            <input
+              type="password"
+              placeholder="Confirmer le mot de passe"
+              required
+              value={password2}
+              onChange={(e) => setPassword2(e.target.value)}
+            />
+            <button type="submit">Modifier</button>
+          </Form>
+        );
       case "password":
         return (
           <Form onSubmit={handleSubmit}>
-            <input type="email" placeholder="Votre e-mail" required />
+            <input
+              type="email"
+              placeholder="Votre e-mail"
+              value={emailReset}
+              onChange={(e) => setEmailReset(e.target.value)}
+              required
+            />
             <button type="submit">Envoyer</button>
           </Form>
         );
@@ -263,6 +332,7 @@ const AuthForm = ({ type }) => {
             </p>
           </>
         );
+
       case "password":
         return (
           <p>
