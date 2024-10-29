@@ -162,7 +162,7 @@ export const sendMailChangePassword = async (req, res) => {
         .json({ success: false, message: "Utilisateur non trouvé." });
     }
 
-    const resetLink = `http://localhost:3000/authentification/changePassword?email=${encodeURIComponent(
+    const resetLink = `https://hotel-red-1.onrender.com/authentification/changePassword?email=${encodeURIComponent(
       email
     )}`;
 
