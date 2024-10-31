@@ -25,8 +25,16 @@ const Dashboard = ({ page }) => {
   const [activePage, setActivePage] = useState(page ? page : "dashboard");
   const [user, setUser] = useState({});
   const router = useRouter();
-  const token = localStorage.getItem("token");
+
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    // Si aucun token n'est présent, redirige l'utilisateur
+    if (!token) {
+      router.push("");
+      return;
+    }
+
     const fetchUser = async () => {
       try {
         const userData = await getUserConnected();
@@ -41,12 +49,9 @@ const Dashboard = ({ page }) => {
     };
 
     fetchUser();
-  }, []);
+  }, [router]);
 
-  if (!user || !token) {
-    router.push("");
-    return;
-  }
+  if (!user) return null;
 
   return (
     <DashboardDiv>
