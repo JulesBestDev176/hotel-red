@@ -4,7 +4,7 @@ import Sidebar from "./sidebar/page";
 import Container from "./container/page";
 import styled from "styled-components";
 import { getUserConnected } from "@/app/services/api";
-import useAuth from "@/hook/useAuth";
+import { useRouter } from "next/navigation";
 
 const DashboardDiv = styled.div`
   width: 100vw;
@@ -22,10 +22,9 @@ const Droite = styled.div`
 `;
 
 const Dashboard = ({ page }) => {
-  const isAuthenticated = useAuth();
-
   const [activePage, setActivePage] = useState(page ? page : "dashboard");
   const [user, setUser] = useState({});
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -34,6 +33,7 @@ const Dashboard = ({ page }) => {
         setUser(userData);
         console.log(userData);
       } catch (error) {
+        router.push("");
         console.error(
           "Erreur lors de la récupération de l'utilisateur : ",
           error
@@ -43,8 +43,6 @@ const Dashboard = ({ page }) => {
 
     fetchUser();
   }, []);
-
-  if (!isAuthenticated) return null;
 
   return (
     <DashboardDiv>
