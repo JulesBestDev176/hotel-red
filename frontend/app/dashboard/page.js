@@ -55,7 +55,7 @@ const Dashboard = ({ page }) => {
     fetchUser();
   }, [router]);
 
-  if (isLoading) return null;
+  if (isLoading) return router.push("");
 
   return (
     <DashboardDiv>
