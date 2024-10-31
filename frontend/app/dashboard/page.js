@@ -24,12 +24,13 @@ const Droite = styled.div`
 const Dashboard = ({ page }) => {
   const [activePage, setActivePage] = useState(page ? page : "dashboard");
   const [user, setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // Si aucun token n'est présent, redirige l'utilisateur
+    // Redirection si aucun token n'est présent
     if (!token) {
       router.push("");
       return;
@@ -45,13 +46,16 @@ const Dashboard = ({ page }) => {
           "Erreur lors de la récupération de l'utilisateur : ",
           error
         );
+        router.push(""); // Redirige si une erreur survient lors de la récupération
+      } finally {
+        setIsLoading(false); // Terminé, permet le rendu
       }
     };
 
     fetchUser();
   }, [router]);
 
-  if (!user) return null;
+  if (isLoading) return null;
 
   return (
     <DashboardDiv>
