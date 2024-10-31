@@ -1,6 +1,7 @@
 import Hotel from "../models/hotel.model.js";
 import cloudinary from "../utils/cloudinary.js";
 import upload from "../middlewares/upload.js";
+import { appendFile } from "fs";
 // Créer un hotel
 export const createHotel = async (req, res) => {
   const hotel = req.body;
@@ -47,9 +48,14 @@ export const createHotel = async (req, res) => {
 
 // Afficher tous les hotels
 export const getHotels = async (req, res) => {
-  const user = JSON.parse(localStorage.getItem("user")); // Récupérer l'utilisateur connecté
+  if (!req.user) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Utilisateur non authentifié" });
+  }
+
   try {
-    const result = await Hotel.find({ userId: user.id }).sort({
+    const result = await Hotel.find({ userId: req.user.id }).sort({
       createdAt: -1,
     });
     res.status(200).json({ success: true, message: "hotels", data: result });
