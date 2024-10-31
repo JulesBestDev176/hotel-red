@@ -27,13 +27,19 @@ const Dashboard = ({ page }) => {
   const router = useRouter();
 
   useEffect(() => {
+    if (!user) {
+      router.push("");
+      return;
+    }
+  }, [user]);
+
+  useEffect(() => {
     const fetchUser = async () => {
       try {
         const userData = await getUserConnected();
         setUser(userData);
         console.log(userData);
       } catch (error) {
-        router.push("");
         console.error(
           "Erreur lors de la récupération de l'utilisateur : ",
           error
