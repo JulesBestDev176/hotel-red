@@ -47,11 +47,14 @@ export const createHotel = async (req, res) => {
 
 // Afficher tous les hotels
 export const getHotels = async (req, res) => {
+  const user = JSON.parse(localStorage.getItem("user")); // Récupérer l'utilisateur connecté
   try {
-    const result = await Hotel.find().sort({ createdAt: -1 });
+    const result = await Hotel.find({ userId: user.id }).sort({
+      createdAt: -1,
+    });
     res.status(200).json({ success: true, message: "hotels", data: result });
   } catch (error) {
-    console.log(`Erreur lors de la recuperation des hotels: ${error.message}`);
+    console.log(`Erreur lors de la récupération des hôtels: ${error.message}`);
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
