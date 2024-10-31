@@ -25,14 +25,7 @@ const Dashboard = ({ page }) => {
   const [activePage, setActivePage] = useState(page ? page : "dashboard");
   const [user, setUser] = useState({});
   const router = useRouter();
-
-  useEffect(() => {
-    if (!user) {
-      router.push("");
-      return;
-    }
-  }, [user]);
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -49,6 +42,11 @@ const Dashboard = ({ page }) => {
 
     fetchUser();
   }, []);
+
+  if (!user || !token) {
+    router.push("");
+    return;
+  }
 
   return (
     <DashboardDiv>
