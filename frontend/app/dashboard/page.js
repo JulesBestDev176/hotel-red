@@ -31,10 +31,6 @@ const Dashboard = ({ page }) => {
     const token = localStorage.getItem("token");
 
     // Redirection si aucun token n'est présent
-    if (!token) {
-      router.push("/");
-      return;
-    }
 
     const fetchUser = async () => {
       try {
@@ -53,6 +49,10 @@ const Dashboard = ({ page }) => {
     };
 
     fetchUser();
+    if (!token) {
+      router.push("/");
+      return;
+    }
   }, [router]);
 
   // if (isLoading) return router.push("/");
