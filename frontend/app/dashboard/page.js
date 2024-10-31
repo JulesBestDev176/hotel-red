@@ -4,6 +4,7 @@ import Sidebar from "./sidebar/page";
 import Container from "./container/page";
 import styled from "styled-components";
 import { getUserConnected } from "@/app/services/api";
+import useAuth from "@/hook/useAuth";
 
 const DashboardDiv = styled.div`
   width: 100vw;
@@ -21,6 +22,8 @@ const Droite = styled.div`
 `;
 
 const Dashboard = ({ page }) => {
+  const isAuthenticated = useAuth();
+
   const [activePage, setActivePage] = useState(page ? page : "dashboard");
   const [user, setUser] = useState({});
 
@@ -40,6 +43,8 @@ const Dashboard = ({ page }) => {
 
     fetchUser();
   }, []);
+
+  if (!isAuthenticated) return null;
 
   return (
     <DashboardDiv>
