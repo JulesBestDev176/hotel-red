@@ -69,8 +69,6 @@ const Main = ({ activePage, hotels, loading, error }) => {
         cards.map((c, index) => <Card key={index} card={c} />)
       ) : loading ? (
         <p>Chargement des hôtels...</p>
-      ) : error ? (
-        <p>Erreur lors de la récupération des hôtels: {error.message}</p>
       ) : hotels && hotels.length > 0 ? (
         hotels.map((hotel, index) => <Hotel key={index} hotel={hotel} />)
       ) : (
