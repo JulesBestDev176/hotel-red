@@ -78,7 +78,8 @@ export const signout = async () => {
       {},
       { withCredentials: true }
     );
-    localStorage.removeItem("token"); // Supprimer le token lors de la déconnexion
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     return response.data;
   } catch (error) {
     console.error("Erreur lors de la déconnexion : ", error);
