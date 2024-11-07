@@ -109,6 +109,7 @@ const Form = styled.form`
     font-size: 12px;
     outline: none;
     background-color: #fff;
+    color: black;
   }
 
   .form-control {
@@ -121,7 +122,6 @@ const Form = styled.form`
   .form-control input[type="checkbox"] {
     margin-right: 10px;
     background-color: white;
-    color: white;
   }
   .form-control label {
     font-size: 11px;
