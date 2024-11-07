@@ -98,7 +98,7 @@ const AuthContainer = styled.div`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  color: rgba(0, 0, 0, 0.87);
+
   font-weight: 400;
 
   input {
@@ -124,6 +124,7 @@ const Form = styled.form`
   }
   .form-control label {
     font-size: 11px;
+    color: rgba(0, 0, 0, 0.87);
   }
 
   button {
