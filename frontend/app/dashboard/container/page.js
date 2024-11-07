@@ -1,9 +1,10 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import styled from "styled-components";
 import Navbar from "../navbar/page";
 import Main from "../main/page";
 import useHotels from "@/app/services/useHotels";
+import Loading from "@/app/loading";
 
 const ContainerDiv = styled.div`
   width: 100%;
@@ -20,13 +21,15 @@ const Container = ({ activePage }) => {
   const { setName, hotels, loading, error } = useHotels();
   return (
     <ContainerDiv>
-      <Navbar activePage={activePage} setHotelName={setName} />
-      <Main
-        activePage={activePage}
-        hotels={hotels}
-        loading={loading}
-        error={error}
-      />
+      <Suspense fallback={<Loading />}>
+        <Navbar activePage={activePage} setHotelName={setName} />
+        <Main
+          activePage={activePage}
+          hotels={hotels}
+          loading={loading}
+          error={error}
+        />
+      </Suspense>
     </ContainerDiv>
   );
 };

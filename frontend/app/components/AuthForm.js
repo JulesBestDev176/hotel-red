@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import styled from "styled-components";
 import {
   login,
@@ -10,6 +10,7 @@ import {
 } from "../services/api";
 import { useRouter } from "next/navigation";
 import Toast from "./Toast";
+import Loading from "../loading";
 
 const AuthPage = styled.div`
   position: relative;
@@ -31,7 +32,7 @@ const Black = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 5, 10, 0.72);
   z-index: 1;
   display: flex;
   align-items: center;
@@ -43,15 +44,15 @@ const Top = styled.div`
   font-family: "Roboto", serif;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.87);
-  font-weight: 700;
-  font-size: 26px;
+  font-weight: 500;
+  font-size: 18px;
   display: flex;
   justify-content: space-around;
-  width: 250px;
+  width: 160px;
   margin-bottom: 30px;
 
   img {
-    width: 32px;
+    width: 22px;
   }
 `;
 
@@ -59,11 +60,10 @@ const Bottom = styled.div`
   margin: 20px 0;
 
   p {
-    font-size: 16px;
+    font-size: 12px;
     margin-bottom: 20px;
     text-align: center;
     font-weight: 400;
-    font-size: 18px;
     color: white;
   }
 
@@ -77,54 +77,63 @@ const Bottom = styled.div`
 `;
 // Styled Components pour le conteneur et les formulaires
 const AuthContainer = styled.div`
-  padding: 30px;
-  border-radius: 4px;
+  padding: 20px;
+  border-radius: 2px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  width: 250px;
+  width: 200px;
+  max-height: 260px;
+  min-height: 100px;
   text-align: center;
   background-color: white;
 
   p {
     color: black;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 11px;
     text-align: left;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+  color: rgba(0, 0, 0, 0.87);
+  font-weight: 400;
 
   input {
     margin: 10px 0;
     padding: 10px 0;
     border: none;
     border-bottom: 1px solid rgba(160, 160, 160, 0.2);
-    font-size: 16px;
+    font-size: 12px;
     outline: none;
+    background-color: #fff;
   }
 
   .form-control {
     display: flex;
     align-items: center;
-    margin: 10px 0;
+    margin: 5px 0;
+    font-size: 13px;
   }
 
   .form-control input[type="checkbox"] {
     margin-right: 10px;
-    color: rgba(160, 160, 160, 0.2);
+    background-color: white;
+  }
+  .form-control label {
+    font-size: 11px;
   }
 
   button {
-    margin-top: 15px;
-    padding: 12px;
+    margin-top: 5px;
+    padding: 10px;
     border: none;
     border-radius: 4px;
     background: rgba(69, 72, 75, 1);
     color: white;
-    font-size: 16px;
+    font-size: 12px;
     cursor: pointer;
   }
 `;
@@ -140,11 +149,24 @@ const AuthForm = ({ type }) => {
   const [error, setError] = useState("");
   const [toastMessage, setToastMessage] = useState("");
   const [color, setColor] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
+    };
+
+    fetchData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setToastMessage("");
+    setIsLoading(true);
 
     if (type === "connexion") {
       try {
@@ -159,6 +181,8 @@ const AuthForm = ({ type }) => {
           "Erreur lors de la connexion. Vérifiez vos identifiants."
         );
         setColor("red");
+      } finally {
+        setIsLoading(false);
       }
     } else if (type === "inscription") {
       try {
@@ -174,6 +198,8 @@ const AuthForm = ({ type }) => {
           "Erreur lors de l'inscription. Vérifiez vos informations."
         );
         setColor("red");
+      } finally {
+        setIsLoading(false);
       }
     } else if (type === "changePassword") {
       const passwords = {
@@ -195,6 +221,8 @@ const AuthForm = ({ type }) => {
           "Erreur lors de l'inscription. Vérifiez vos informations."
         );
         setColor("red");
+      } finally {
+        setIsLoading(false);
       }
     } else if (type === "password") {
       try {
@@ -208,6 +236,8 @@ const AuthForm = ({ type }) => {
           "Erreur lors de la modification. Vérifiez vos informations."
         );
         setColor("red");
+      } finally {
+        setIsLoading(false);
       }
     } else {
       console.log("a");
@@ -240,6 +270,12 @@ const AuthForm = ({ type }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
+            <div className="form-control">
+              <input type="checkbox" id="question" />
+              <label htmlFor="question">
+                Accepter les termes et la politique
+              </label>
+            </div>
             <button type="submit">S'inscrire</button>
           </Form>
         );
@@ -368,23 +404,26 @@ const AuthForm = ({ type }) => {
     }
   };
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <AuthPage>
-      <Black>
-        <Top>
-          <div>
-            <img src="/assets/svg/redproduct.png" />
-          </div>
-          <div>RED PRODUCT</div>
-        </Top>
-
-        <AuthContainer>
-          {toastMessage && <Toast message={toastMessage} color={color} />}
-          {renderTopMessage()}
-          {renderForm()}
-        </AuthContainer>
-        <Bottom>{renderBottomMessage()}</Bottom>
-      </Black>
+      <Suspense fallback={<Loading />}>
+        <Black>
+          <Top>
+            <div>
+              <img src="/assets/svg/redproduct.png" />
+            </div>
+            <div>RED PRODUCT</div>
+          </Top>
+          <AuthContainer>
+            {toastMessage && <Toast message={toastMessage} color={color} />}
+            {renderTopMessage()}
+            {renderForm()}
+          </AuthContainer>
+          <Bottom>{renderBottomMessage()}</Bottom>
+        </Black>
+      </Suspense>
     </AuthPage>
   );
 };

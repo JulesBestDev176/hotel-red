@@ -5,7 +5,8 @@ import { FaArrowLeft } from "react-icons/fa";
 import { FaRegImage } from "react-icons/fa";
 import { addHotel } from "@/app/services/api";
 import { useRouter } from "next/navigation";
-
+import Loading from "@/app/loading";
+import Toast from "@/app/components/Toast";
 const Container = styled.div`
   position: absolute;
   top: 0;
@@ -60,6 +61,14 @@ const Form = styled.form`
     border-radius: 8px;
     border: 1px solid #ccc;
     width: 80%;
+    background-color: white;
+    color: black;
+    &::placeholder {
+      color: #55595c;
+    }
+  }
+  input.filled {
+    background-color: white;
   }
   select {
     width: 90%;
@@ -124,7 +133,18 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [verif, setVerif] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [toastMessage, setToastMessage] = useState("");
+  const [color, setColor] = useState("green");
 
+  useEffect(() => {
+    const fetchData = async () => {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
+    };
+    fetchData();
+  }, []);
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
 
@@ -142,6 +162,7 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
       console.error("Selected file is not a valid image");
     }
   };
+
   //   const fetchUser = async () => {
   //     try {
   //       const userData = await getUserConnected();
@@ -166,6 +187,25 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setToastMessage("");
+    const phoneRegex = /^[+0-9]*$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    setColor("green");
+    if (!phoneRegex.test(tel)) {
+      setToastMessage(
+        "Le numéro de téléphone est invalide. Il ne doit contenir que des chiffres ou le signe '+'"
+      );
+      setColor("red");
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      setToastMessage(
+        "L'email est invalide. Assurez-vous qu'il a le bon format (exemple@domaine.com)."
+      );
+      setColor("red");
+      return;
+    }
 
     // Create a FormData object to handle the image upload
     const formData = new FormData();
@@ -188,18 +228,23 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
       setTel("");
       setPrix("");
       setImage("");
-
+      setColor("green");
       console.log("Hotel ajouté avec succés:", result);
+      setToastMessage("Hotel ajouté avec succés.");
       onClose();
       location.reload();
       router.push("/dashboard?value=hotel");
     } catch (error) {
+      setColor("red");
+      setToastMessage("Erreur lors de l'ajout de l'hotel:", error);
       console.error("Erreur lors de l'ajout de l'hotel:", error);
     }
   };
 
   if (!isOpen) return null;
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <Container>
       <HotelDiv>
         <Top>
@@ -299,6 +344,7 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
           </div>
         </Form>
       </HotelDiv>
+      {toastMessage && <Toast message={toastMessage} color={color} />}
     </Container>
   );
 };

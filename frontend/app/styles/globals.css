@@ -8,3 +8,7 @@ body {
   font-family: "Roboto", sans-serif;
   background-color: #F0F0F0;
 }
+
+input {
+  background-color: white;
+}

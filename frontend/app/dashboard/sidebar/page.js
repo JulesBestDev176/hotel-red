@@ -19,7 +19,7 @@ const SidebarDiv = styled.div`
 const Black = styled.div`
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 5, 10, 0.72);
   z-index: 1;
   display: flex;
   flex-direction: column;
@@ -29,32 +29,35 @@ const Black = styled.div`
 const Top = styled.div`
   display: flex;
   flex-direction: column;
-  height: 85%;
+  height: 90%;
 `;
 
 const Logo = styled.div`
   display: flex;
-  justify-content: space-around;
   align-items: center;
-  width: 100%;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.87);
-  font-weight: 700;
-  font-size: 26px;
-  display: flex;
-  justify-content: space-between;
-  width: 250px;
-  margin-bottom: 10px;
-  padding: 20px;
+  font-weight: 500;
+  padding: 10px 15px;
+
+  div {
+    display: flex;
+    img {
+      width: 20px;
+      margin-right: 15px;
+    }
+  }
+  .redProduct {
+    font-size: 17px;
+  }
 `;
 
 const Principale = styled.div`
   color: rgba(255, 255, 255, 0.87);
-  font-weight: 400;
-  font-size: 16px;
+  font-weight: 300;
+  font-size: 11px;
   display: flex;
-  margin-bottom: 10px;
-  padding: 20px;
+  padding: 15px;
 `;
 
 const List = styled.div`
@@ -69,11 +72,11 @@ const StyledLink = styled(Link)`
 
 const Line = styled.div`
   background: ${(props) => (props.$primary ? "#F0F0F0" : "none")};
-  padding: 10px 20px;
+  padding: 5px 15px;
   color: ${(props) =>
     props.$primary ? "#55595C" : "rgba(255, 255, 255, 0.87)"};
   font-weight: 500;
-  font-size: 18px;
+  font-size: 12px;
   display: flex;
   align-items: center;
 
@@ -81,7 +84,7 @@ const Line = styled.div`
     margin-right: 20px;
     display: flex;
     align-items: center;
-    font-size: 26px;
+    font-size: 20px;
   }
 
   .image {
@@ -100,9 +103,9 @@ const Line = styled.div`
     margin-top: 10px;
     display: flex;
     align-items: center;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 300;
-    color: #55595c;
+    color: rgba(255, 255, 255, 0.6);
   }
 
   .online {
@@ -113,7 +116,7 @@ const Line = styled.div`
   }
 
   .nom {
-    font-size: 18px;
+    font-size: 12px;
     font-weight: 400;
   }
 
@@ -124,8 +127,8 @@ const Line = styled.div`
 `;
 
 const Bottom = styled.div`
-  height: 15%;
-  border-top: 1px solid #55595c;
+  height: 10%;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   width: 90%;
 `;
 
@@ -138,7 +141,7 @@ const Sidebar = ({ activePage, setActivePage, user }) => {
             <div>
               <img src="/assets/svg/redproduct.png" alt="red product" />
             </div>
-            <div>RED PRODUCT</div>
+            <div className="redProduct">RED PRODUCT</div>
           </Logo>
           <Principale>Principale</Principale>
           <List>

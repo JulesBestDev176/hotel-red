@@ -5,20 +5,21 @@ import Container from "./container/page";
 import styled from "styled-components";
 import { getUserConnected } from "@/app/services/api";
 import { useRouter } from "next/navigation";
+import Loading from "../loading";
+import { Suspense } from "react";
 
 const DashboardDiv = styled.div`
   width: 100vw;
   display: flex;
+  margin: 0;
 `;
 
 const Gauche = styled.div`
-  width: 25%; /* Set width to 25% */
-  margin: 0;
+  width: 19%; /* Set width to 25% */
 `;
 
 const Droite = styled.div`
-  width: 75%;
-  margin: 0;
+  width: 81%;
 `;
 
 const Dashboard = ({ page }) => {
@@ -55,20 +56,32 @@ const Dashboard = ({ page }) => {
     }
   }, [router]);
 
-  // if (isLoading) return router.push("/");
+  useEffect(() => {
+    const fetchData = async () => {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
+    };
 
-  return (
+    fetchData();
+  }, []);
+
+  return isLoading ? (
+    <Loading />
+  ) : (
     <DashboardDiv>
-      <Gauche>
-        <Sidebar
-          user={user}
-          activePage={activePage}
-          setActivePage={setActivePage}
-        />
-      </Gauche>
-      <Droite>
-        <Container user={user} activePage={activePage} />
-      </Droite>
+      <Suspense fallback={<Loading />}>
+        <Gauche>
+          <Sidebar
+            user={user}
+            activePage={activePage}
+            setActivePage={setActivePage}
+          />
+        </Gauche>
+        <Droite>
+          <Container user={user} activePage={activePage} />
+        </Droite>
+      </Suspense>
     </DashboardDiv>
   );
 };

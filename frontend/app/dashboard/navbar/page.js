@@ -8,29 +8,45 @@ import { listHotel, signout } from "@/app/services/api";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Hotel from "../hotel/page";
+import { GoPlus } from "react-icons/go";
 
 const NavbarDiv = styled.div`
   background-color: white;
   width: 100%;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
+  color: black;
 `;
 
 const Top = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 20px 20px;
+  padding: 5px 30px;
   align-items: ${(props) => (props.$primary ? "center" : "left")};
   flex-direction: ${(props) => (props.$primary ? "row" : "column")};
   border-bottom: ${(props) => (props.$primary ? "1px solid #ccc" : "none")};
+  .bottom {
+    padding: 10px 0;
+    height: 35px;
+  }
 `;
 
 const Menu = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  width: 45%;
+  width: 32%;
+  padding: 5px;
+
+  .search {
+    width: 180px;
+    height: 15px;
+    color: #ccc;
+  }
+  input {
+    color: #ccc;
+  }
 
   .notif {
     position: relative;
@@ -40,48 +56,61 @@ const Menu = styled.div`
     position: absolute;
     top: 0;
     right: 0;
-    transform: translateY(-40%) translateX(70%);
-    width: 20px;
-    height: 20px;
+    transform: translateY(-50%) translateX(60%);
+    width: 10px;
+    height: 10px;
     border-radius: 30%;
     background-color: #fcc100;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+    font-size: 11px;
+    font-weight: 300;
   }
 `;
 
 const Titre = styled.div`
-  font-size: ${(props) => (props.$primary ? "16px" : "20px")};
+  font-size: ${(props) => (props.$primary ? "18px" : "20px")};
   font-weight: ${(props) => (props.$primary ? "500" : "300")};
+  color: black;
+  span {
+    color: #ccc;
+  }
+`;
+
+const StyledPlus = styled(GoPlus)`
+  font-size: 16px;
 `;
 
 const Paragraphe = styled.p`
-  margin-top: 10px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 300;
+  color: #55595c;
 `;
 
 const Form = styled.div`
   display: flex;
   align-items: center;
-  border: 1px solid #55595c;
+  border: 1px solid #78828c21;
   border-radius: 32px;
   padding: 5px;
   background-color: white;
+  width: 150px;
+  color: #55595c;
 
   input {
     border: none;
     outline: none;
     width: 100%;
-    padding: 2px;
+    padding: 0;
     border-radius: 50px;
-    font-size: 16px;
-    color: #55595c;
+    font-size: 11px;
+    color: #ccc;
+    background-color: white;
 
     &::placeholder {
-      color: #aaa;
+      color: #ccc;
     }
   }
 `;
@@ -89,16 +118,17 @@ const Form = styled.div`
 const SearchIcon = styled(FaSearch)`
   font-size: 16px;
   font-weight: 300;
-  margin-right: 10px;
-  color: #55595c;
+  margin: 0 10px;
+  color: #ccc;
 `;
 
 const NotificationIcon = styled(IoIosNotificationsOutline)`
-  font-size: 30px;
+  font-size: 16px;
+  cursor: pointer;
 `;
 
 const LogoutIcon = styled(LuLogOut)`
-  font-size: 30px;
+  font-size: 16px;
   cursor: pointer;
 `;
 
@@ -106,14 +136,14 @@ const User = styled.div`
   position: relative;
   img {
     border-radius: 100%;
-    width: 30px;
+    width: 25px;
   }
 
   .online {
     position: absolute;
-    width: 10px;
-    height: 10px;
-    border: 3px solid white;
+    width: 7px;
+    height: 7px;
+    border: 2px solid white;
     background-color: #00ff92;
     border-radius: 100%;
     bottom: 0;
@@ -127,6 +157,8 @@ const HotelNav = styled.div`
   justify-content: space-between;
   width: 100%;
   align-items: center;
+  padding: 10px 0;
+  height: 35px;
 `;
 
 const Ajout = styled.div`
@@ -134,12 +166,15 @@ const Ajout = styled.div`
   justify-content: space-between;
   align-items: center;
   border: 1px solid #ccc;
-  padding: 7px;
-  border-radius: 6px;
+  padding: 10px;
+  border-radius: 12px;
   cursor: pointer;
   div {
     display: flex;
     align-items: center;
+    font-size: 14px;
+    font-weight: 300;
+    color: black;
   }
 `;
 
@@ -186,7 +221,7 @@ const Navbar = ({ activePage, setHotelName }) => {
           {activePage === "dashboard" ? "Dashboard" : "Liste des hôtels"}
         </Titre>
         <Menu>
-          <Form>
+          <Form className="search">
             <SearchIcon />
             <input
               type="text"
@@ -210,16 +245,18 @@ const Navbar = ({ activePage, setHotelName }) => {
       </Top>
       <Top>
         {activePage === "dashboard" ? (
-          <>
+          <div className="bottom">
             <Titre>Bienvenue sur RED Product</Titre>
             <Paragraphe>Lorem ipsum dolor sit amet consectetur</Paragraphe>
-          </>
+          </div>
         ) : (
           <HotelNav>
-            <Titre>Hôtels {hotel}</Titre>
+            <Titre className="titre">
+              Hôtels&nbsp; &nbsp; <span>{hotel}</span>
+            </Titre>
             <Ajout onClick={openModal}>
               <div>
-                <FaPlus />
+                <StyledPlus />
                 &nbsp; &nbsp; Créer un nouveau hôtel
               </div>
             </Ajout>

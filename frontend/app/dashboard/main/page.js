@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "./card/page";
 import { FaEnvelopeOpen } from "react-icons/fa6";
@@ -8,13 +8,20 @@ import { FaUserFriends } from "react-icons/fa";
 import { listHotel } from "@/app/services/api";
 import Hotel from "./hotel/page";
 import useHotels from "@/app/services/useHotels";
+import Loading from "@/app/loading";
 
 const MainDiv = styled.div`
-  padding: 20px;
+  padding: 30px;
+  width: 100%;
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   flex-wrap: wrap;
   overflow-y: auto;
+  /* & > div:nth-child(3n) {
+    margin-right: 0;
+  } */
+  color: black;
 `;
 
 const Main = ({ activePage, hotels, loading, error }) => {
@@ -65,15 +72,17 @@ const Main = ({ activePage, hotels, loading, error }) => {
 
   return (
     <MainDiv>
-      {activePage === "dashboard" ? (
-        cards.map((c, index) => <Card key={index} card={c} />)
-      ) : loading ? (
-        <p>Chargement des hôtels...</p>
-      ) : hotels && hotels.length > 0 ? (
-        hotels.map((hotel, index) => <Hotel key={index} hotel={hotel} />)
-      ) : (
-        <p>Aucun hôtel trouvé.</p>
-      )}
+      <Suspense fallback={<Loading />}>
+        {activePage === "dashboard" ? (
+          cards.map((c, index) => <Card key={index} card={c} />)
+        ) : loading ? (
+          <Loading />
+        ) : hotels && hotels.length > 0 ? (
+          hotels.map((hotel, index) => <Hotel key={index} hotel={hotel} />)
+        ) : (
+          <p>Aucun hôtel trouvé.</p>
+        )}
+      </Suspense>
     </MainDiv>
   );
 };

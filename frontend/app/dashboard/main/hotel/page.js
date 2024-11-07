@@ -3,26 +3,28 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 
 const HotelDiv = styled.div`
-  width: calc(30% - 20px);
+  width: 222px;
   margin-bottom: 20px;
   margin-right: 20px;
-  height: 300px;
+  height: 260px;
   background-color: white;
   border: none;
-  border-radius: 6px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
   display: flex;
 
   display: flex;
   flex-direction: column;
+  &:last-child {
+    margin-right: 0;
+  }
 `;
 
 const Image = styled.div`
   width: 100%;
-  height: 75%;
+  height: 65%;
   img {
     width: 100%;
-    border-radius: 6px 6px 0 0;
+    border-radius: 12px 12px 0 0;
     height: 100%;
   }
 `;
@@ -34,20 +36,19 @@ const Info = styled.div`
 
   .adresse {
     color: rgba(141, 75, 56, 1);
-    font-size: 12px;
-    margin-bottom: 5px;
+    font-size: 11px;
   }
 
   .nom {
-    font-size: 16px;
-    font-weight: 400;
+    font-size: 15px;
+    font-weight: 500;
     margin-bottom: 10px;
   }
 
   .prix {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 300;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
 `;
 
