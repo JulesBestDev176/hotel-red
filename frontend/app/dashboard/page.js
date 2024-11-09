@@ -12,14 +12,33 @@ const DashboardDiv = styled.div`
   width: 100vw;
   display: flex;
   margin: 0;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+  }
 `;
 
 const Gauche = styled.div`
-  width: 19%; /* Set width to 25% */
+  width: 19%;
+  @media (max-width: 768px) {
+    width: 100%;
+    order: 2;
+    position: fixed;
+    bottom: 0;
+    height: 20%;
+    /* z-index: 20; */
+  }
 `;
 
 const Droite = styled.div`
   width: 81%;
+  @media (max-width: 768px) {
+    width: 100%;
+    order: 1;
+    margin-left: 0;
+    height: 80%;
+  }
 `;
 
 const Dashboard = ({ page }) => {
@@ -60,7 +79,7 @@ const Dashboard = ({ page }) => {
     const fetchData = async () => {
       setTimeout(() => {
         setIsLoading(false);
-      }, 3000);
+      }, 1000);
     };
 
     fetchData();

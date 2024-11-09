@@ -24,6 +24,10 @@ const Black = styled.div`
   display: flex;
   flex-direction: column;
   margin: 0;
+  @media (max-width: 768px) {
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const Top = styled.div`
@@ -39,52 +43,88 @@ const Logo = styled.div`
   color: rgba(255, 255, 255, 0.87);
   font-weight: 500;
   padding: 10px 15px;
+  @media (max-width: 768px) {
+    justify-content: center;
+    display: none;
+  }
 
   div {
     display: flex;
+
     img {
-      width: 20px;
+      width: 24px;
       margin-right: 15px;
     }
   }
   .redProduct {
-    font-size: 17px;
+    font-size: 20px;
   }
 `;
 
 const Principale = styled.div`
   color: rgba(255, 255, 255, 0.87);
-  font-weight: 300;
-  font-size: 11px;
+  font-weight: 500;
+  font-size: 15px;
   display: flex;
   padding: 15px;
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const List = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  @media (max-width: 768px) {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 const StyledLink = styled(Link)`
-  text-decoration: none; // Supprime le soulignement du lien
+  text-decoration: none;
 `;
 
 const Line = styled.div`
   background: ${(props) => (props.$primary ? "#F0F0F0" : "none")};
-  padding: 5px 15px;
+  padding: 10px 15px;
   color: ${(props) =>
     props.$primary ? "#55595C" : "rgba(255, 255, 255, 0.87)"};
   font-weight: 500;
-  font-size: 12px;
+  font-size: 16px;
   display: flex;
   align-items: center;
+  @media (max-width: 768px) {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+  }
+
+  .text {
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
 
   .icone {
     margin-right: 20px;
     display: flex;
     align-items: center;
     font-size: 20px;
+    @media (max-width: 768px) {
+      justify-content: center;
+      font-size: 40px;
+      transform: translateX(25%);
+    }
   }
 
   .image {
@@ -116,7 +156,7 @@ const Line = styled.div`
   }
 
   .nom {
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 400;
   }
 
@@ -130,6 +170,9 @@ const Bottom = styled.div`
   height: 10%;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   width: 90%;
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const Sidebar = ({ activePage, setActivePage, user }) => {

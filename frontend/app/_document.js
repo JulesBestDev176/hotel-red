@@ -7,7 +7,6 @@ export default class MyDocument extends Document {
     const originalRenderPage = ctx.renderPage;
 
     try {
-      // Rendre les styles des composants pour le SSR
       ctx.renderPage = () =>
         originalRenderPage({
           enhanceApp: (App) => (props) =>

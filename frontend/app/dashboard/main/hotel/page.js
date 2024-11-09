@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 
 const HotelDiv = styled.div`
-  width: 222px;
+  width: 246px;
   margin-bottom: 20px;
   margin-right: 20px;
   height: 260px;

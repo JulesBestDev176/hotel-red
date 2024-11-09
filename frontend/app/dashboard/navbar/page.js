@@ -38,6 +38,9 @@ const Menu = styled.div`
   align-items: center;
   width: 32%;
   padding: 5px;
+  @media (max-width: 768px) {
+    width: 70%;
+  }
 
   .search {
     width: 180px;
@@ -56,16 +59,16 @@ const Menu = styled.div`
     position: absolute;
     top: 0;
     right: 0;
-    transform: translateY(-50%) translateX(60%);
-    width: 10px;
-    height: 10px;
+    transform: translateY(-40%) translateX(60%);
+    width: 12px;
+    height: 12px;
     border-radius: 30%;
     background-color: #fcc100;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 300;
   }
 `;
@@ -123,12 +126,12 @@ const SearchIcon = styled(FaSearch)`
 `;
 
 const NotificationIcon = styled(IoIosNotificationsOutline)`
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
 `;
 
 const LogoutIcon = styled(LuLogOut)`
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
 `;
 
@@ -136,14 +139,14 @@ const User = styled.div`
   position: relative;
   img {
     border-radius: 100%;
-    width: 25px;
+    width: 30px;
   }
 
   .online {
     position: absolute;
-    width: 7px;
-    height: 7px;
-    border: 2px solid white;
+    width: 10px;
+    height: 10px;
+    border: 3px solid white;
     background-color: #00ff92;
     border-radius: 100%;
     bottom: 0;

@@ -22,6 +22,11 @@ const MainDiv = styled.div`
     margin-right: 0;
   } */
   color: black;
+  @media (max-width: 768px) {
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 120px;
+  }
 `;
 
 const Main = ({ activePage, hotels, loading, error }) => {

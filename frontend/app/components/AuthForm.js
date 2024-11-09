@@ -1,6 +1,5 @@
 "use client";
-import React, { useState, useEffect, Suspense } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import {
   login,
   signup,
@@ -11,134 +10,17 @@ import {
 import { useRouter } from "next/navigation";
 import Toast from "./Toast";
 import Loading from "../loading";
-
-const AuthPage = styled.div`
-  position: relative;
-  width: 100vw;
-  height: 100vh;
-  background-image: url("/assets/images/background.jpeg");
-  background-size: cover;
-  background-position: center;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Black = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 5, 10, 0.72);
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-`;
-
-const Top = styled.div`
-  font-family: "Roboto", serif;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.87);
-  font-weight: 500;
-  font-size: 18px;
-  display: flex;
-  justify-content: space-around;
-  width: 160px;
-  margin-bottom: 30px;
-
-  img {
-    width: 22px;
-  }
-`;
-
-const Bottom = styled.div`
-  margin: 20px 0;
-
-  p {
-    font-size: 12px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: 400;
-    color: white;
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  span {
-    color: rgba(255, 217, 100, 1);
-  }
-`;
-// Styled Components pour le conteneur et les formulaires
-const AuthContainer = styled.div`
-  padding: 20px;
-  border-radius: 2px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  width: 200px;
-  max-height: 260px;
-  min-height: 100px;
-  text-align: center;
-  background-color: white;
-
-  p {
-    color: black;
-    font-weight: 400;
-    font-size: 11px;
-    text-align: left;
-    margin-bottom: 10px;
-  }
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-
-  font-weight: 400;
-
-  input {
-    margin: 10px 0;
-    padding: 10px 0;
-    border: none;
-    border-bottom: 1px solid rgba(160, 160, 160, 0.2);
-    font-size: 12px;
-    outline: none;
-    background-color: #fff;
-    color: black;
-  }
-
-  .form-control {
-    display: flex;
-    align-items: center;
-    margin: 5px 0;
-    font-size: 13px;
-  }
-
-  .form-control input[type="checkbox"] {
-    margin-right: 10px;
-    background-color: white;
-  }
-  .form-control label {
-    font-size: 11px;
-    color: rgba(0, 0, 0, 0.87);
-  }
-
-  button {
-    margin-top: 5px;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    background: rgba(69, 72, 75, 1);
-    color: white;
-    font-size: 12px;
-    cursor: pointer;
-  }
-`;
+import {
+  AuthPage,
+  Black,
+  Top,
+  Bottom,
+  AuthContainer,
+  Form,
+  Message,
+  ErrorMessage,
+  SuccessMessage,
+} from "./style";
 
 const AuthForm = ({ type }) => {
   const router = useRouter();
@@ -148,58 +30,134 @@ const AuthForm = ({ type }) => {
   const [password1, setPassword1] = useState("");
   const [password2, setPassword2] = useState("");
   const [nom, setNom] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({
+    nom: "",
+    email: "",
+    password: "",
+    password1: "",
+    password2: "",
+    emailReset: "",
+  });
   const [toastMessage, setToastMessage] = useState("");
   const [color, setColor] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 3000);
-    };
+  const [loading, setIsLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
-    fetchData();
-  }, []);
+  useEffect(() => {
+    if (toastMessage) {
+      setShowToast(true);
+      const timer = setTimeout(() => {
+        setShowToast(false);
+        setToastMessage("");
+      }, 3000); // Le toast reste visible 3 secondes
+
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
+
+  const validateNom = (value) => {
+    if (value === "") {
+      setErrors((prev) => ({ ...prev, nom: "Le nom ne doit pas être vide." }));
+    } else if (value.length <= 1) {
+      setErrors((prev) => ({ ...prev, nom: "Au moins 2 caracteres." }));
+    } else if (/\d/.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        nom: "Le nom ne doit pas contenir de chiffre.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, nom: "" }));
+    }
+  };
+
+  const validateEmail = (value) => {
+    setErrors("");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (value === "") {
+      setErrors((prev) => ({
+        ...prev,
+        email: "L'Email ne doit pas être vide",
+      }));
+    } else if (!emailRegex.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "Veuillez entrer un email valide.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, email: "" }));
+    }
+  };
+
+  const validateSamePassword = (value1, value2) => {
+    if (value2 !== "" && value1 !== value2) {
+      setErrors((prev) => ({
+        ...prev,
+        password2: "Mot de passe non identique",
+      }));
+    }
+  };
+
+  const validatePassword = (value) => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (value === "") {
+      setErrors((prev) => ({
+        ...prev,
+        password: "Le mot de passe ne doit pas être vide",
+      }));
+    } else if (!passwordRegex.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        password:
+          "majuscule, minuscule, un chiffre, caractère spécial, 8 caractères.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, password: "" }));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setToastMessage("");
-    setIsLoading(true);
+    setColor("");
 
     if (type === "connexion") {
       try {
         const result = await login({ email, password });
-        console.log(result);
+
+        setToastMessage("Connexion réussie!");
         setColor("green");
-        router.push("/dashboard");
+
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 3000);
       } catch (error) {
-        setEmail("");
-        setPassword("");
         setToastMessage(
           "Erreur lors de la connexion. Vérifiez vos identifiants."
         );
         setColor("red");
+
+        setEmail("");
+        setPassword("");
       } finally {
         setIsLoading(false);
       }
     } else if (type === "inscription") {
       try {
         const result = await signup({ nom, email, password });
+        setToastMessage("Inscription réussie!");
         setColor("green");
-        router.push("../");
+        setTimeout(() => {
+          router.push("/");
+        }, 5000);
       } catch (error) {
-        setNom("");
-        setEmail("");
-        setPassword("");
-        console.log(error);
         setToastMessage(
           "Erreur lors de l'inscription. Vérifiez vos informations."
         );
         setColor("red");
+        setNom("");
+        setEmail("");
+        setPassword("");
       } finally {
         setIsLoading(false);
       }
@@ -212,24 +170,24 @@ const AuthForm = ({ type }) => {
       const email = urlParams.get("email");
       try {
         const result = await changePassword({ passwords }, email);
+        setToastMessage("Mot de passe changé avec succés.");
         setColor("green");
-        router.push("../");
+        setTimeout(() => {
+          router.push("/");
+        }, 5000);
       } catch (error) {
+        setToastMessage("Erreur lors de la modification du mot de passe");
+        setColor("red");
         setPassword1("");
         setPassword2("");
         setPassword("");
-        console.log(error);
-        setToastMessage(
-          "Erreur lors de l'inscription. Vérifiez vos informations."
-        );
-        setColor("red");
       } finally {
         setIsLoading(false);
       }
     } else if (type === "password") {
       try {
         const result = await sendResetEmail({ email: emailReset });
-
+        setToastMessage("Un lien vous a été envoyé par mail");
         setColor("green");
         setEmailReset("");
       } catch (error) {
@@ -256,22 +214,59 @@ const AuthForm = ({ type }) => {
               placeholder="Nom"
               required
               value={nom}
-              onChange={(e) => setNom(e.target.value)}
+              onChange={(e) => {
+                setNom(e.target.value);
+                validateNom(e.target.value);
+              }}
             />
+            <Message>
+              {nom === "" ? (
+                ""
+              ) : errors.nom ? (
+                <ErrorMessage>{errors.nom}</ErrorMessage>
+              ) : (
+                <SuccessMessage>valide</SuccessMessage>
+              )}
+            </Message>
+
             <input
               type="email"
-              placeholder="Email"
+              placeholder="E-mail"
               required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                validateEmail(e.target.value);
+              }}
             />
+            <Message>
+              {email === "" ? (
+                ""
+              ) : errors.email ? (
+                <ErrorMessage>{errors.email}</ErrorMessage>
+              ) : (
+                <SuccessMessage>valide</SuccessMessage>
+              )}
+            </Message>
             <input
               type="password"
               placeholder="Mot de passe"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                validatePassword(e.target.value);
+              }}
             />
+            <Message>
+              {password === "" ? (
+                ""
+              ) : errors.password ? (
+                <ErrorMessage>{errors.password}</ErrorMessage>
+              ) : (
+                <SuccessMessage>valide</SuccessMessage>
+              )}
+            </Message>
             <div className="form-control">
               <input type="checkbox" id="question" />
               <label htmlFor="question">
@@ -286,18 +281,42 @@ const AuthForm = ({ type }) => {
           <Form onSubmit={handleSubmit}>
             <input
               type="email"
-              placeholder="Email"
+              placeholder="E-mail"
               required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                validateEmail(e.target.value);
+                setEmail(e.target.value);
+              }}
             />
+            <Message>
+              {email === "" ? (
+                ""
+              ) : errors.email ? (
+                <ErrorMessage>{errors.email}</ErrorMessage>
+              ) : (
+                <SuccessMessage>valide</SuccessMessage>
+              )}
+            </Message>
             <input
               type="password"
               placeholder="Mot de passe"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                validatePassword(e.target.value);
+                setPassword(e.target.value);
+              }}
             />
+            <Message>
+              {password === "" ? (
+                ""
+              ) : errors.password ? (
+                <ErrorMessage>{errors.password}</ErrorMessage>
+              ) : (
+                <SuccessMessage>valide</SuccessMessage>
+              )}
+            </Message>
             <div className="form-control">
               <input type="checkbox" id="question" />
               <label htmlFor="question">Gardez-moi connecté</label>
@@ -313,15 +332,41 @@ const AuthForm = ({ type }) => {
               placeholder="Mot de passe"
               required
               value={password1}
-              onChange={(e) => setPassword1(e.target.value)}
+              onChange={(e) => {
+                setPassword1(e.target.value);
+                validatePassword(e.target.value);
+              }}
             />
+            <Message>
+              {password1 === "" ? (
+                ""
+              ) : errors.password1 ? (
+                <ErrorMessage>{errors.password1}</ErrorMessage>
+              ) : (
+                <SuccessMessage>valide</SuccessMessage>
+              )}
+            </Message>
             <input
               type="password"
               placeholder="Confirmer le mot de passe"
               required
               value={password2}
-              onChange={(e) => setPassword2(e.target.value)}
+              onChange={(e) => {
+                setPassword2(e.target.value);
+                validatePassword(e.target.value);
+                validateSamePassword(e.target.value, password2);
+              }}
             />
+            <Message>
+              {password2 === "" ? (
+                ""
+              ) : errors.password2 ? (
+                <ErrorMessage>{errors.password2}</ErrorMessage>
+              ) : (
+                <SuccessMessage>valide</SuccessMessage>
+              )}
+            </Message>
+
             <button type="submit">Modifier</button>
           </Form>
         );
@@ -332,9 +377,24 @@ const AuthForm = ({ type }) => {
               type="email"
               placeholder="Votre e-mail"
               value={emailReset}
-              onChange={(e) => setEmailReset(e.target.value)}
+              onChange={(e) => {
+                setEmailReset(e.target.value);
+                validateEmail(e.target.value);
+              }}
               required
             />
+            <Message>
+              {emailReset === "" ? (
+                ""
+              ) : errors.email ? (
+                <ErrorMessage>{errors.email}</ErrorMessage>
+              ) : errors.email === "" ? (
+                ""
+              ) : (
+                <SuccessMessage>valide</SuccessMessage>
+              )}
+            </Message>
+
             <button type="submit">Envoyer</button>
           </Form>
         );
@@ -395,7 +455,7 @@ const AuthForm = ({ type }) => {
         return (
           <>
             <p>Mot de passe oublié?</p>
-            <p>
+            <p className="pa">
               Entrez votre adresse e-mail ci-dessous et nous vous envoyons des
               instructions sur la façon de modifier votre mot de passe.
             </p>
@@ -406,26 +466,22 @@ const AuthForm = ({ type }) => {
     }
   };
 
-  return isLoading ? (
-    <Loading />
-  ) : (
+  return (
     <AuthPage>
-      <Suspense fallback={<Loading />}>
-        <Black>
-          <Top>
-            <div>
-              <img src="/assets/svg/redproduct.png" />
-            </div>
-            <div>RED PRODUCT</div>
-          </Top>
-          <AuthContainer>
-            {toastMessage && <Toast message={toastMessage} color={color} />}
-            {renderTopMessage()}
-            {renderForm()}
-          </AuthContainer>
-          <Bottom>{renderBottomMessage()}</Bottom>
-        </Black>
-      </Suspense>
+      <Black>
+        <Top>
+          <div>
+            <img src="/assets/svg/redproduct.png" />
+          </div>
+          <div>RED PRODUCT</div>
+        </Top>
+        <AuthContainer>
+          <Toast message={toastMessage} color={color} show={showToast} />
+          {renderTopMessage()}
+          {renderForm()}
+        </AuthContainer>
+        <Bottom>{renderBottomMessage()}</Bottom>
+      </Black>
     </AuthPage>
   );
 };
