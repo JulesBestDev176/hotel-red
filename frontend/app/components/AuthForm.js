@@ -21,6 +21,8 @@ import {
   ErrorMessage,
   SuccessMessage,
 } from "./style";
+import { FaCheckCircle } from "react-icons/fa";
+import { ImCross } from "react-icons/im";
 
 const AuthForm = ({ type }) => {
   const router = useRouter();
@@ -223,9 +225,14 @@ const AuthForm = ({ type }) => {
               {nom === "" ? (
                 ""
               ) : errors.nom ? (
-                <ErrorMessage>{errors.nom}</ErrorMessage>
+                <ErrorMessage>
+                  <ImCross />
+                  &nbsp;{errors.nom}
+                </ErrorMessage>
               ) : (
-                <SuccessMessage>valide</SuccessMessage>
+                <SuccessMessage>
+                  <FaCheckCircle />
+                </SuccessMessage>
               )}
             </Message>
 
@@ -243,9 +250,14 @@ const AuthForm = ({ type }) => {
               {email === "" ? (
                 ""
               ) : errors.email ? (
-                <ErrorMessage>{errors.email}</ErrorMessage>
+                <ErrorMessage>
+                  <ImCross />
+                  &nbsp;{errors.email}
+                </ErrorMessage>
               ) : (
-                <SuccessMessage>valide</SuccessMessage>
+                <SuccessMessage>
+                  <FaCheckCircle />
+                </SuccessMessage>
               )}
             </Message>
             <input
@@ -262,9 +274,14 @@ const AuthForm = ({ type }) => {
               {password === "" ? (
                 ""
               ) : errors.password ? (
-                <ErrorMessage>{errors.password}</ErrorMessage>
+                <ErrorMessage>
+                  <ImCross />
+                  &nbsp;{errors.password}
+                </ErrorMessage>
               ) : (
-                <SuccessMessage>valide</SuccessMessage>
+                <SuccessMessage>
+                  <FaCheckCircle />
+                </SuccessMessage>
               )}
             </Message>
             <div className="form-control">
@@ -293,9 +310,14 @@ const AuthForm = ({ type }) => {
               {email === "" ? (
                 ""
               ) : errors.email ? (
-                <ErrorMessage>{errors.email}</ErrorMessage>
+                <ErrorMessage>
+                  <ImCross />
+                  &nbsp;{errors.email}
+                </ErrorMessage>
               ) : (
-                <SuccessMessage>valide</SuccessMessage>
+                <SuccessMessage>
+                  <FaCheckCircle />
+                </SuccessMessage>
               )}
             </Message>
             <input
@@ -312,9 +334,14 @@ const AuthForm = ({ type }) => {
               {password === "" ? (
                 ""
               ) : errors.password ? (
-                <ErrorMessage>{errors.password}</ErrorMessage>
+                <ErrorMessage>
+                  <ImCross />
+                  &nbsp;{errors.password}
+                </ErrorMessage>
               ) : (
-                <SuccessMessage>valide</SuccessMessage>
+                <SuccessMessage>
+                  <FaCheckCircle />
+                </SuccessMessage>
               )}
             </Message>
             <div className="form-control">
@@ -341,9 +368,14 @@ const AuthForm = ({ type }) => {
               {password1 === "" ? (
                 ""
               ) : errors.password1 ? (
-                <ErrorMessage>{errors.password1}</ErrorMessage>
+                <ErrorMessage>
+                  <ImCross />
+                  &nbsp;{errors.password1}
+                </ErrorMessage>
               ) : (
-                <SuccessMessage>valide</SuccessMessage>
+                <SuccessMessage>
+                  <FaCheckCircle />
+                </SuccessMessage>
               )}
             </Message>
             <input
@@ -361,9 +393,14 @@ const AuthForm = ({ type }) => {
               {password2 === "" ? (
                 ""
               ) : errors.password2 ? (
-                <ErrorMessage>{errors.password2}</ErrorMessage>
+                <ErrorMessage>
+                  <ImCross />
+                  &nbsp;{errors.password2}
+                </ErrorMessage>
               ) : (
-                <SuccessMessage>valide</SuccessMessage>
+                <SuccessMessage>
+                  <FaCheckCircle />
+                </SuccessMessage>
               )}
             </Message>
 
@@ -387,11 +424,16 @@ const AuthForm = ({ type }) => {
               {emailReset === "" ? (
                 ""
               ) : errors.email ? (
-                <ErrorMessage>{errors.email}</ErrorMessage>
+                <ErrorMessage>
+                  <ImCross />
+                  &nbsp;{errors.email}
+                </ErrorMessage>
               ) : errors.email === "" ? (
                 ""
               ) : (
-                <SuccessMessage>valide</SuccessMessage>
+                <SuccessMessage>
+                  <FaCheckCircle />
+                </SuccessMessage>
               )}
             </Message>
 

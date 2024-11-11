@@ -7,6 +7,9 @@ import { addHotel } from "@/app/services/api";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/loading";
 import Toast from "@/app/components/Toast";
+import { FaCheckCircle } from "react-icons/fa";
+import { ImCross } from "react-icons/im";
+
 const Container = styled.div`
   position: absolute;
   top: 0;
@@ -121,6 +124,23 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+export const Message = styled.div`
+  padding: 0;
+  margin-top: 5px;
+  margin-left: 10px;
+  height: 10px;
+`;
+
+export const ErrorMessage = styled.p`
+  color: red !important;
+  font-size: 10px !important;
+`;
+
+export const SuccessMessage = styled.p`
+  color: green !important;
+  font-size: 10px !important;
+`;
+
 const Hotel = ({ isOpen, onClose, refreshPage }) => {
   // const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
@@ -136,6 +156,79 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState("");
   const [color, setColor] = useState("green");
+  const [errors, setErrors] = useState({
+    nom: "",
+    email: "",
+    tel: "",
+    prix: "",
+  });
+
+  const validateNom = (value) => {
+    if (value === "") {
+      setErrors((prev) => ({
+        ...prev,
+        nom: "Le nom ne doit pas être vide.",
+      }));
+    } else if (value.length <= 1) {
+      setErrors((prev) => ({ ...prev, nom: "Au moins 2 caracteres." }));
+    } else if (/\d/.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        nom: "Le nom ne doit pas contenir de chiffre.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, nom: "" }));
+    }
+  };
+
+  const validateTel = (value) => {
+    if (value === "") {
+      setErrors((prev) => ({
+        ...prev,
+        tel: "Le numéro de téléphone ne doit pas être vide.",
+      }));
+    } else if (!/^\+221(70|75|76|77|78)\d{7}$/.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        tel: "Le numéro doit commencer par +221, suivi de 70, 75, 76, 77, ou 78.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, tel: "" }));
+    }
+  };
+  const validatePrix = (value) => {
+    if (value === "") {
+      setErrors((prev) => ({
+        ...prev,
+        prix: "Le prix ne doit pas être vide.",
+      }));
+    } else if (!/^\d+$/.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        prix: "Le prix doit être un entier positif.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, prix: "" }));
+    }
+  };
+
+  const validateEmail = (value) => {
+    setErrors("");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (value === "") {
+      setErrors((prev) => ({
+        ...prev,
+        email: "L'Email ne doit pas être vide",
+      }));
+    } else if (!emailRegex.test(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "Veuillez entrer un email valide.",
+      }));
+    } else {
+      setErrors((prev) => ({ ...prev, email: "" }));
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -190,6 +283,7 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
     setToastMessage("");
     const phoneRegex = /^[+0-9]*$/;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
     setColor("green");
     if (!phoneRegex.test(tel)) {
       setToastMessage(
@@ -258,10 +352,28 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
               <input
                 type="text"
                 value={nom}
-                onChange={(e) => setNom(e.target.value)}
+                onChange={(e) => {
+                  setNom(e.target.value);
+                  validateNom(e.target.value);
+                }}
                 required
               />
+              <Message>
+                {nom === "" ? (
+                  ""
+                ) : errors.nom ? (
+                  <ErrorMessage>
+                    <ImCross />
+                    &nbsp;{errors.nom}
+                  </ErrorMessage>
+                ) : (
+                  <SuccessMessage>
+                    <FaCheckCircle />
+                  </SuccessMessage>
+                )}
+              </Message>
             </div>
+
             <div className="form">
               <label>Adresse</label>
               <input
@@ -270,6 +382,7 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
                 onChange={(e) => setAdresse(e.target.value)}
                 required
               />
+              <Message></Message>
             </div>
           </div>
           <div className="form-control">
@@ -278,18 +391,53 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
               <input
                 type="mail"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  validateEmail(e.target.value);
+                }}
                 required
               />
+              <Message>
+                {email === "" ? (
+                  ""
+                ) : errors.email ? (
+                  <ErrorMessage>
+                    <ImCross />
+                    &nbsp;{errors.email}
+                  </ErrorMessage>
+                ) : (
+                  <SuccessMessage>
+                    <FaCheckCircle />
+                  </SuccessMessage>
+                )}
+              </Message>
             </div>
+
             <div className="form">
               <label>Numéro de téléphone</label>
               <input
                 type="text"
                 value={tel}
-                onChange={(e) => setTel(e.target.value)}
+                onChange={(e) => {
+                  setTel(e.target.value);
+                  validateTel(e.target.value);
+                }}
                 required
               />
+              <Message>
+                {tel === "" ? (
+                  ""
+                ) : errors.tel ? (
+                  <ErrorMessage>
+                    <ImCross />
+                    &nbsp;{errors.tel}
+                  </ErrorMessage>
+                ) : (
+                  <SuccessMessage>
+                    <FaCheckCircle />
+                  </SuccessMessage>
+                )}
+              </Message>
             </div>
           </div>
           <div className="form-control">
@@ -298,10 +446,28 @@ const Hotel = ({ isOpen, onClose, refreshPage }) => {
               <input
                 type="text"
                 value={prix}
-                onChange={(e) => setPrix(e.target.value)}
+                onChange={(e) => {
+                  setPrix(e.target.value);
+                  validatePrix(e.target.value);
+                }}
                 required
               />
+              <Message>
+                {prix === "" ? (
+                  ""
+                ) : errors.prix ? (
+                  <ErrorMessage>
+                    <ImCross />
+                    &nbsp;{errors.prix}
+                  </ErrorMessage>
+                ) : (
+                  <SuccessMessage>
+                    <FaCheckCircle />
+                  </SuccessMessage>
+                )}
+              </Message>
             </div>
+
             <div className="form">
               <label>Devise</label>
               <select

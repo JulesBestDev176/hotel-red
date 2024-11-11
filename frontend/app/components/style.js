@@ -141,7 +141,7 @@ export const Form = styled.form`
 
 export const Message = styled.div`
   padding: 0;
-  margin-top: 0px;
+  margin-top: 5px;
   height: 10px;
 `;
 
